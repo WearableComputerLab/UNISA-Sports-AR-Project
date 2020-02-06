@@ -9,6 +9,7 @@ public class PlayerBehaviour : MonoBehaviour
     private string[][] data;
     private string[] lines;
     private int maxLines;
+    private int startingTuple = -1;
 
     //    [SerializeField] to display the values
     private float XPos;
@@ -22,7 +23,6 @@ public class PlayerBehaviour : MonoBehaviour
         for (int i = 0; i < lines.Length; i++)
         {
             data[i] = lines[i].Split(',');
-
         }
     }
 
@@ -35,7 +35,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
         {
-
             if (data[i][5] != " ----")
             {
                 XPos = getLat(Convert.ToDouble(data[i][5].Substring(1)));
@@ -46,15 +45,16 @@ public class PlayerBehaviour : MonoBehaviour
                 YPos = getLong(Convert.ToDouble(data[i][6].Substring(1)));
             }
 
+            if (((data[i][6] != " ----") && (data[i][5] != " ----")) && (startingTuple != -1))
+            {
+                startingTuple = i;
+            }
             gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), 10f);
-
 
         }
 
         i += 1;
-
         maxLines = lines.Length;
-
     }
 
     // WHY WON'T THIS WORK?
@@ -64,26 +64,35 @@ public class PlayerBehaviour : MonoBehaviour
         float prevPosX;
         float prevPosY;
 
-        if ((i >= 100) && (!String.IsNullOrEmpty(lines[i])))
+        if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
         {
 
-            if ((i >= 100) && (data[i - 10][5] != " ----"))
+            if ((i >= 500) && (data[i - 500][5] != " ----"))
             {
-                prevPosX = getLat(Convert.ToDouble(data[i - 100][5].Substring(1)));
-                prevPosY = getLong(Convert.ToDouble(data[i - 100][6].Substring(1)));
+                prevPosX = getLat(Convert.ToDouble(data[i - 500][5].Substring(1)));
+                prevPosY = getLong(Convert.ToDouble(data[i - 500][6].Substring(1)));
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, 12, prevPosY), 10f);
-
-
             }
 
-
-        }
-
+            else
+            {
+                if (startingTuple != -1)
+                {
+                    prevPosX = getLat(Convert.ToDouble(data[startingTuple][5].Substring(1)));
+                    prevPosY = getLong(Convert.ToDouble(data[startingTuple][6].Substring(1)));
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, 12, prevPosY), 10f);
+                }
+            }
+        }   
     }
 
-    public void test()
+    public void FixedUpdate()
     {
-        print("Hello");
+        Ray ray = new Ray(transform.position, Vector3.left);
+        RaycastHit[] hits = Physics.RaycastAll(ray, 500);
+
+        Debug.DrawLine(transform.position, transform.position + Vector3.left * 500);
+
 
     }
 

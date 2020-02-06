@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     GameObject[] players = new GameObject[6];
     private int timeIndex = 0;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,18 +24,16 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < filePaths.Length; i++)
         {
             players[i] = Instantiate(player);
-            players[i].transform.localScale += new Vector3(10, 10, 10);
             players[i].GetComponent<PlayerBehaviour>().filePath = filePaths[i];
             players[i].GetComponent<PlayerBehaviour>().ReadFile();
-
-
 
         }
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {        
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             print("Pressed DOWN");
@@ -43,9 +42,17 @@ public class PlayerController : MonoBehaviour
             {
                 players[i].GetComponent<PlayerBehaviour>().rewindTenSec(timeIndex);
 
-
             }
-            timeIndex -= 100;
+
+            if (timeIndex > 500)
+            {
+                timeIndex -= 500;
+            }
+            else
+            {
+                timeIndex = 0;
+            }
+
 
         }
 
