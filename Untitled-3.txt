@@ -1,0 +1,29 @@
+    void _CreateMenu(int ButtonNum)
+    {
+        MenuPrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Resources/MenuPrefabs/DefaultMenu.prefab", typeof(GameObject));
+        GameObject tempMenu = Instantiate(MenuPrefab);
+
+
+        // menu title text
+        tempMenu.transform.GetChild(2).GetComponentInChildren<Text>().text = TitleText;
+
+        // resize panel, canvas size
+        //tempMenu.GetComponent<RectTransform>().offsetMin = new Vector2(0.4519997 + )
+
+
+        for (int i = 0; i < ButtonNum; i++)
+        {
+            ButtonPrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Resources/MenuPrefabs/DefaultButton.prefab", typeof(GameObject));
+            GameObject tempButton = Instantiate(ButtonPrefab, tempMenu.transform.GetChild(1).transform);
+            //GameObject tempButton = Instantiate(ButtonPrefab, tempMenu.transform);
+
+            var ButtonScript = tempButton.GetComponent<ManageButton>();
+            ButtonScript.SetButtonText(ButtonNames[i]);
+            //MenuScript.Type = ButtonTypes[i];
+            //MenuScript.name = ButtonNames[i];
+        }
+
+
+        //var MenuScript = temp.GetComponent<ManageMenu>();
+        //MenuScript.Init(ButtonNum, TitleText);
+    }

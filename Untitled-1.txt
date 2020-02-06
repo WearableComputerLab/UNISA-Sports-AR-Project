@@ -1,0 +1,47 @@
+using UnityEngine;
+using UnityEditor;
+
+public class CreateMenu : EditorWindow
+{
+    private int ButtonNum;
+    private int[] ButtonType;
+
+    private enum BUTTON_TYPE { func, subMenu };
+
+    [MenuItem("MyMenu/Menu Creator")]
+    public static void ShowWindow()
+    {
+        GetWindow<CreateMenu>("Menu Creator");
+    }
+
+
+    void OnGUI()
+    {
+        
+
+        GUILayout.Label("Creat VR menus", EditorStyles.boldLabel);
+
+        ButtonNum = EditorGUILayout.IntField("Number of Buttons: ", ButtonNum);
+        ButtonType = 
+
+
+        int[] types = { 0, 1 };
+        string[] names = new string[] { "Functions", "SubMenus" };
+
+        for(int i = 0; i < ButtonNum; i++)
+        {
+            int selectedType = 1;
+            //EditorGUILayout.DropdownButton(GUIContent.none, FocusType.Passive);
+
+            selectedType = EditorGUILayout.IntPopup("Button " + i + " Type: ", selectedType, names, types);
+
+        }
+
+
+        if (GUILayout.Button("Create a Menu!"))
+        {
+            Debug.Log("Num of Btns:" + ButtonNum);
+        }
+
+    }
+}

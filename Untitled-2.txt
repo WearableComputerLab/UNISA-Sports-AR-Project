@@ -1,0 +1,132 @@
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UI;
+
+
+public class CreateMenu : EditorWindow
+{
+    public GameObject MenuPrefab;
+
+
+    public int ButtonNum;
+    //public int[] ButtonTypes = new int[20];
+    //public string[] ButtonNames = new string[20];
+
+    public int[] ButtonTypes;
+    public string[] ButtonNames;
+
+
+    public enum BUTTON_TYPE { func, subMenu };
+
+    public string[] MenuTypes = new string[] { "Default Menu", "Ring Menu" };
+    public int MenuType;
+
+    public string TitleText;
+
+    //public string _tempButtonName;
+    //public int _tempButtonType;
+
+
+    [MenuItem("MyMenu/Menu Creator")]
+    public static void ShowWindow()
+    {
+        GetWindow<CreateMenu>("Menu Creator");
+        
+    }
+
+    Vector2 scrollPosition;
+    int[] types = { 0, 1 };
+    string[] names = new string[] { "Functions", "SubMenus" };
+
+
+    void OnGUI()
+    {
+        GUILayout.Label("Creat VR menus", EditorStyles.boldLabel);
+
+        MenuType = EditorGUILayout.Popup("Menu Type: ", MenuType, MenuTypes);
+        TitleText = EditorGUILayout.TextField("Menu Title: ", TitleText);
+        ButtonNum = EditorGUILayout.IntField("Number of Buttons: ", ButtonNum);
+        EditorGUILayout.Space();
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+
+
+
+
+        GUILayout.BeginVertical();
+
+        for (int i = 0; i < ButtonNum; i++)
+        {
+            Debug.Log(ButtonNum);
+
+            //int currentType = 0; // default type: function
+            //string currentName = "Button" + i;
+
+            EditorGUILayout.LabelField("Button " + i);
+
+            ButtonNames[i] = EditorGUILayout.TextField("    Name: ", ButtonNames[i]);
+            ButtonTypes[i] = EditorGUILayout.IntPopup("    Type: ", ButtonTypes[i], names, types);
+
+            //ButtonNames[i] = currentName;
+            //ButtonTypes[i] = currentType;
+        }
+
+
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Create a Menu!"))
+        {
+            Debug.Log(">>> Num of Btns: " + ButtonNum);
+            _CreateMenu(ButtonNum);
+        }
+
+        GUILayout.EndScrollView();
+        GUILayout.EndVertical();
+    }
+
+
+
+
+
+    public GameObject ButtonPrefab;
+
+    void _CreateMenu(int ButtonNum)
+    {
+        MenuPrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Resources/MenuPrefabs/DefaultMenu.prefab", typeof(GameObject));
+        GameObject tempMenu = Instantiate(MenuPrefab);
+
+
+        // menu title text
+        tempMenu.transform.GetChild(2).GetComponentInChildren<Text>().text = TitleText;
+
+        // resize panel, canvas size
+        //tempMenu.GetComponent<RectTransform>().offsetMin = new Vector2(0.4519997 + )
+
+
+        for (int i=0; i<ButtonNum; i++)
+        {
+            ButtonPrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Resources/MenuPrefabs/DefaultButton.prefab", typeof(GameObject));
+            GameObject tempButton = Instantiate(ButtonPrefab, tempMenu.transform.GetChild(1).transform);
+            //GameObject tempButton = Instantiate(ButtonPrefab, tempMenu.transform);
+
+            var ButtonScript = tempButton.GetComponent<ManageButton>();
+            ButtonScript.SetButtonText(ButtonNames[i]);
+            //MenuScript.Type = ButtonTypes[i];
+            //MenuScript.name = ButtonNames[i];
+        }
+
+
+        //var MenuScript = temp.GetComponent<ManageMenu>();
+        //MenuScript.Init(ButtonNum, TitleText);
+
+
+        
+    }
+
+    //void _resetArray()
+    //{
+    //    for(int i=0; i<20; i++)
+    //    {
+    //        ButtonTypes[i] = 0;
+    //        ButtonNames[i] = "";
+    //    }
+    //}
+}
