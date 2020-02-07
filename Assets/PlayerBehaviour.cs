@@ -15,6 +15,8 @@ public class PlayerBehaviour : MonoBehaviour
     private float XPos;
     private float YPos;
 
+    
+
     public void ReadFile()
     {
         TextAsset file = Resources.Load(filePath) as TextAsset;
@@ -66,7 +68,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
         {
-
             if ((i >= 500) && (data[i - 500][5] != " ----"))
             {
                 prevPosX = getLat(Convert.ToDouble(data[i - 500][5].Substring(1)));
@@ -85,14 +86,11 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }   
     }
+ 
 
-    public void FixedUpdate()
+    public void OnRaycastHit()
     {
-        Ray ray = new Ray(transform.position, Vector3.left);
-        RaycastHit[] hits = Physics.RaycastAll(ray, 500);
-
-        Debug.DrawLine(transform.position, transform.position + Vector3.left * 500);
-
+        GameObject.Find("Main Camera").GetComponent<CameraController>().Follow(gameObject);
 
     }
 

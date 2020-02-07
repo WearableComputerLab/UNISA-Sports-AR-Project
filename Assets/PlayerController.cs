@@ -6,13 +6,17 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     public GameObject player;
+    public GameObject playerDetailsTextBox;
+    public GameObject playerDetailsText;
+
     GameObject[] players = new GameObject[6];
     private int timeIndex = 0;
-
 
     // Start is called before the first frame update
     void Start()
     {
+
+
         string[] filePaths = new string[6];
         filePaths[0] = "Boak 2514 201005011355 (1)";
         filePaths[1] = "Gray 2525 201005011512";
@@ -32,12 +36,10 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {        
+    {
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            print("Pressed DOWN");
-
             for (int i = 0; i < players.Length; i++)
             {
                 players[i].GetComponent<PlayerBehaviour>().rewindTenSec(timeIndex);
@@ -53,7 +55,6 @@ public class PlayerController : MonoBehaviour
                 timeIndex = 0;
             }
 
-
         }
 
         else
@@ -62,16 +63,10 @@ public class PlayerController : MonoBehaviour
             {
                 players[i].GetComponent<PlayerBehaviour>().Move(timeIndex);
 
-
             }
-
         }
 
         timeIndex += 1;
-
-        
-
     }
-
 
 }
