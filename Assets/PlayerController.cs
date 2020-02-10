@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     GameObject[] players = new GameObject[6];
     private int timeIndex = 0;
+    private int changeFactor = 700;
 
     // Start is called before the first frame update
     void Start()
@@ -42,13 +43,13 @@ public class PlayerController : MonoBehaviour
         {
             for (int i = 0; i < players.Length; i++)
             {
-                players[i].GetComponent<PlayerBehaviour>().rewindTenSec(timeIndex);
+                players[i].GetComponent<PlayerBehaviour>().rewind(timeIndex, changeFactor);
 
             }
 
-            if (timeIndex > 500)
+            if (timeIndex > changeFactor)
             {
-                timeIndex -= 500;
+                timeIndex -= changeFactor;
             }
             else
             {

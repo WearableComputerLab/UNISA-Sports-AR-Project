@@ -36,9 +36,7 @@ public class ObjectRaycaster : MonoBehaviour
                 
             }
 
- //           Debug.DrawRay(transform.position, ray.direction);
         }
-
        
     }
 

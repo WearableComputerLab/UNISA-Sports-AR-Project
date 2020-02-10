@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Globalization;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -14,8 +15,11 @@ public class PlayerBehaviour : MonoBehaviour
     //    [SerializeField] to display the values
     private float XPos;
     private float YPos;
+    private DateTime prevTime;
+    private DateTime currentTime;
+    private double timeTaken = 0;
 
-    
+
 
     public void ReadFile()
     {
@@ -37,6 +41,20 @@ public class PlayerBehaviour : MonoBehaviour
 
         if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
         {
+
+            if (data[i][0].Length == 7)
+            {
+                prevTime = currentTime;
+                currentTime = DateTime.ParseExact(data[i][0], "m:ss.ff", CultureInfo.InvariantCulture);
+                timeTaken = (currentTime - prevTime).TotalMilliseconds;
+            }
+            else if (data[i][0].Length == 8)
+            {
+                prevTime = currentTime;
+                currentTime = DateTime.ParseExact(data[i][0], "mm:ss.ff", CultureInfo.InvariantCulture);
+                timeTaken = (currentTime - prevTime).TotalMilliseconds;
+            }
+
             if (data[i][5] != " ----")
             {
                 XPos = getLat(Convert.ToDouble(data[i][5].Substring(1)));
@@ -51,27 +69,26 @@ public class PlayerBehaviour : MonoBehaviour
             {
                 startingTuple = i;
             }
-            gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), 10f);
-
+            gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            // Chaneg the float stuff if need be. It is behaving strangely
         }
 
         i += 1;
         maxLines = lines.Length;
     }
 
-    // WHY WON'T THIS WORK?
-
-    public void rewindTenSec(int i)
+ 
+    public void rewind(int i, int changeFactor)
     {
         float prevPosX;
         float prevPosY;
 
         if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
         {
-            if ((i >= 500) && (data[i - 500][5] != " ----"))
+            if ((i >= changeFactor) && (data[i - changeFactor][5] != " ----"))
             {
-                prevPosX = getLat(Convert.ToDouble(data[i - 500][5].Substring(1)));
-                prevPosY = getLong(Convert.ToDouble(data[i - 500][6].Substring(1)));
+                prevPosX = getLat(Convert.ToDouble(data[i - changeFactor][5].Substring(1)));
+                prevPosY = getLong(Convert.ToDouble(data[i - changeFactor][6].Substring(1)));
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, 12, prevPosY), 10f);
             }
 
@@ -84,12 +101,20 @@ public class PlayerBehaviour : MonoBehaviour
                     gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, 12, prevPosY), 10f);
                 }
             }
-        }   
+        }
     }
- 
+
 
     public void OnRaycastHit()
     {
+        GameObject trackedObj = GameObject.Find("Main Camera").GetComponent<CameraController>().target;
+        Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
+
+        if (trackedObj != null)
+        {
+            trackedObj.GetComponent<Renderer>().material = origMat;
+        }
+
         GameObject.Find("Main Camera").GetComponent<CameraController>().Follow(gameObject);
 
     }

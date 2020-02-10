@@ -5,25 +5,35 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private bool followingTarget = false;
-    GameObject target;
+    public GameObject target;
     // Start is called before the first frame update
     void Start()
     {
+        
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
+
         if ((Input.GetKeyDown(KeyCode.Escape)))
         {
             followingTarget = false;
+            target.GetComponent<Renderer>().material = origMat;
         }
 
         if (followingTarget)
         {
-            gameObject.transform.position = Vector3.Lerp(transform.position, target.transform.position + new Vector3(-10, 20, -30), 0.125f);
-        }
+            Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
+            target.GetComponent<Renderer>().material = newMat;
+            gameObject.transform.position = Vector3.Lerp(transform.position, target.transform.position + new Vector3(0, 20, -30), 0.125f);
+    
+
+
+    }
 
         else
         {
