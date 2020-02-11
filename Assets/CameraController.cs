@@ -30,8 +30,7 @@ public class CameraController : MonoBehaviour
             Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
             target.GetComponent<Renderer>().material = newMat;
             gameObject.transform.position = Vector3.Lerp(transform.position, target.transform.position + new Vector3(0, 20, -30), 0.125f);
-    
-
+            gameObject.transform.LookAt(target.transform);
 
     }
 

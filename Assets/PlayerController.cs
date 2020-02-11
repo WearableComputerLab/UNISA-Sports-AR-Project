@@ -16,8 +16,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
         string[] filePaths = new string[6];
         filePaths[0] = "Boak 2514 201005011355 (1)";
         filePaths[1] = "Gray 2525 201005011512";
@@ -44,18 +42,17 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < players.Length; i++)
             {
                 players[i].GetComponent<PlayerBehaviour>().rewind(timeIndex, changeFactor);
-
             }
 
             if (timeIndex > changeFactor)
             {
                 timeIndex -= changeFactor;
             }
+
             else
             {
                 timeIndex = 0;
             }
-
         }
 
         else
@@ -63,11 +60,8 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < players.Length; i++)
             {
                 players[i].GetComponent<PlayerBehaviour>().Move(timeIndex);
-
             }
         }
-
         timeIndex += 1;
     }
-
 }
