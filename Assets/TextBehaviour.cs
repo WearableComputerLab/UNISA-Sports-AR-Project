@@ -5,40 +5,47 @@ using TMPro;
 
 public class TextBehaviour : MonoBehaviour
 {
-    float width = 24;
-    GameObject player;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject plane;
+    private GameObject player;
+    private float boundOffset;
+    private float lowXBound = -63;
+    private float highXBound = 63;
+    private float boxYPos = (float)191.1;
+    private float boxZPos = (float)-176.8;
 
     // Update is called once per frame
     void Update()
     {
-        if(player != null)
+        boundOffset = gameObject.GetComponent<RectTransform>().rect.width / 2;
+
+        if (player != null)
         {
-            if ((player.transform.position.x > (gameObject.transform.position.x + width)) || (player.transform.position.x < (gameObject.transform.position.x - width)))
+            if ((player.transform.position.x > (gameObject.transform.position.x + boundOffset)) || (player.transform.position.x < (gameObject.transform.position.x - boundOffset)))
             {
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(player.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z), 10f);
+                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(player.transform.position.x, boxYPos, boxZPos), 10f);
 
+                if (gameObject.transform.position.x < lowXBound)
+                {
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(lowXBound, boxYPos, boxZPos), 10f);
+
+                }
+                else if(gameObject.transform.position.x > highXBound)
+                {
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(highXBound, boxYPos, boxZPos), 10f);
+
+                }
             }
-
         }
     }
 
     public void setTitle(string title){
 
         gameObject.transform.Find("Title").GetComponent<TextMeshPro>().text = title;
-
-
     }
 
     public void SetPlayer(GameObject player)
     {
         this.player = player;
-
     }
 
 }

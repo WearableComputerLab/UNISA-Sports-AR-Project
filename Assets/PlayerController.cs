@@ -23,11 +23,14 @@ public class PlayerController : MonoBehaviour
         filePaths[4] = "StewartP 2515 201005011354";
         filePaths[5] = "Thomas 2531 201005011355";
 
+        PlayerBehaviour pb;
+
         for (int i = 0; i < filePaths.Length; i++)
         {
             players[i] = Instantiate(player);
-            players[i].GetComponent<PlayerBehaviour>().filePath = filePaths[i];
-            players[i].GetComponent<PlayerBehaviour>().ReadFile();
+            pb = players[i].GetComponent<PlayerBehaviour>();
+            pb.filePath = filePaths[i];
+            pb.ReadFile();
         }
     }
 
@@ -58,6 +61,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         timeIndex += 1;
-        Thread.Sleep(100);
+//        Thread.Sleep(100);
     }
 }

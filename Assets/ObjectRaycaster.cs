@@ -4,28 +4,44 @@ using UnityEngine;
 
 public class ObjectRaycaster : MonoBehaviour
 {
-
     public LayerMask mask;
     GameObject hitObject;
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        Vector3 mousePos = Input.mousePosition;
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+
+
+
+        if (Physics.Raycast(ray, out hit))
         {
-            Vector3 mousePos = Input.mousePosition;            
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(mousePos);
+            hitObject = hit.transform.gameObject;
+            PlayerBehaviour objBehaviour = hitObject.GetComponent<PlayerBehaviour>();
+
+            if (objBehaviour != null)
+            {
+                objBehaviour.DisplayDetails();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
 
             if (Physics.Raycast(ray, out hit))
             {
                 hitObject = hit.transform.gameObject;
+                PlayerBehaviour objBehaviour = hitObject.GetComponent<PlayerBehaviour>();
 
-                if (hitObject.GetComponent<PlayerBehaviour>() != null)
+                if (objBehaviour != null)
                 {
-                    hitObject.GetComponent<PlayerBehaviour>().Observe();
-                }           
+                    objBehaviour.Observe();
+                }
             }
-        }     
+        }
     }
+
+
 }
