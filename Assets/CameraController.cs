@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
         {
             followingTarget = false;
             target.GetComponent<Renderer>().material = origMat;
-            Camera.main.transform.position = new Vector3(7, 209, -309);
+            Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
             Camera.main.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
             Camera.main.transform.parent = null;
         }

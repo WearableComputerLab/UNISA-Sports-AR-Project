@@ -8,10 +8,9 @@ public class TextBehaviour : MonoBehaviour
     public GameObject plane;
     private GameObject player;
     private float boundOffset;
-    private float lowXBound = -63;
-    private float highXBound = 63;
-    private float boxYPos = (float)191.1;
-    private float boxZPos = (float)-176.8;
+    private float lowXBound = Dimensions.textBoxLowBoundX;
+    private float highXBound = Dimensions.textBoxHighBoundX;
+
 
     // Update is called once per frame
     void Update()
@@ -22,16 +21,16 @@ public class TextBehaviour : MonoBehaviour
         {
             if ((player.transform.position.x > (gameObject.transform.position.x + boundOffset)) || (player.transform.position.x < (gameObject.transform.position.x - boundOffset)))
             {
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(player.transform.position.x, boxYPos, boxZPos), 10f);
+                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(player.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z), 10f);
 
                 if (gameObject.transform.position.x < lowXBound)
                 {
-                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(lowXBound, boxYPos, boxZPos), 10f);
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(lowXBound, gameObject.transform.position.y, gameObject.transform.position.z), 10f);
 
                 }
                 else if(gameObject.transform.position.x > highXBound)
                 {
-                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(highXBound, boxYPos, boxZPos), 10f);
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(highXBound, gameObject.transform.position.y, gameObject.transform.position.z), 10f);
 
                 }
             }
@@ -47,5 +46,4 @@ public class TextBehaviour : MonoBehaviour
     {
         this.player = player;
     }
-
 }

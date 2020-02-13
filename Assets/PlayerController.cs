@@ -61,6 +61,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         timeIndex += 1;
-//        Thread.Sleep(100);
+        Thread.Sleep(40);
     }
 }

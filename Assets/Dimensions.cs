@@ -1,0 +1,24 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Dimensions : MonoBehaviour
+{
+   
+    // Values related to the csv data
+    public static double centrePointLong = 138.495485;
+    public static double centrePointLat = 34.879921;
+
+    /*
+     * Probably need to change some or all of the following, if changing size of virtual stadium
+     */
+    // Values for simulation
+    public static int scaleFactor = 400000;
+    public static int textBoxLowBoundX = -126;
+    public static int textBoxHighBoundX = 126;
+    public static float cameraDefaultX = 7;
+    public static float cameraDefaultY = 225;
+    public static float cameraDefaultZ = -445;
+
+
+}

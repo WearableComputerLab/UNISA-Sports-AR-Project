@@ -14,8 +14,6 @@ public class ObjectRaycaster : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
-
-
         if (Physics.Raycast(ray, out hit))
         {
             hitObject = hit.transform.gameObject;
@@ -42,6 +40,4 @@ public class ObjectRaycaster : MonoBehaviour
             }
         }
     }
-
-
 }

@@ -7,7 +7,6 @@ using System.Globalization;
 public class PlayerBehaviour : MonoBehaviour
 {
     public string filePath;
-
     private string[][] data;
     private string[] lines;
     private int maxLines;
@@ -128,16 +127,14 @@ public class PlayerBehaviour : MonoBehaviour
     private float getLong(double longCoord)
     {
         // Find the difference between the current point and center point, multiply by 200000 to scale it
-        double scaledCoord = (longCoord - 138.495485) * 200000;
+        double scaledCoord = (longCoord - Dimensions.centrePointLong) * Dimensions.scaleFactor;
         return (float)scaledCoord;
     }
-
 
     private float getLat(double latCoord)
     {
         // Find the difference between the current point and center point, multiply by 200000 to scale it
-        double scaledCoord = (latCoord + 34.879921) * 200000;
-
+        double scaledCoord = (latCoord + Dimensions.centrePointLat) * Dimensions.scaleFactor;
         return (float)scaledCoord;
     }
 
