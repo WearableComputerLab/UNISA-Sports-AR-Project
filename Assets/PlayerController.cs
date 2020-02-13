@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Threading;
 
 public class PlayerController : MonoBehaviour
 {
     public GameObject player;
-    public GameObject playerDetailsTextBox;
-    public GameObject playerDetailsText;
-
+    public GameObject playerDetails;
     GameObject[] players = new GameObject[6];
     private int timeIndex = 0;
     private int changeFactor = 700;
@@ -29,26 +28,22 @@ public class PlayerController : MonoBehaviour
             players[i] = Instantiate(player);
             players[i].GetComponent<PlayerBehaviour>().filePath = filePaths[i];
             players[i].GetComponent<PlayerBehaviour>().ReadFile();
-
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             for (int i = 0; i < players.Length; i++)
             {
                 players[i].GetComponent<PlayerBehaviour>().rewind(timeIndex, changeFactor);
             }
-
             if (timeIndex > changeFactor)
             {
                 timeIndex -= changeFactor;
             }
-
             else
             {
                 timeIndex = 0;
@@ -63,5 +58,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         timeIndex += 1;
+        Thread.Sleep(100);
     }
 }

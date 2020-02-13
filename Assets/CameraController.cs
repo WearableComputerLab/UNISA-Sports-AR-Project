@@ -6,11 +6,11 @@ public class CameraController : MonoBehaviour
 {
     private bool followingTarget = false;
     public GameObject target;
+    private static Vector3 offset = new Vector3(0, -5, 10);
+
     // Start is called before the first frame update
     void Start()
     {
-        
-
 
     }
 
@@ -23,26 +23,23 @@ public class CameraController : MonoBehaviour
         {
             followingTarget = false;
             target.GetComponent<Renderer>().material = origMat;
+            Camera.main.transform.position = new Vector3(7, 209, -309);
+            Camera.main.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
+            Camera.main.transform.parent = null;
         }
 
         if (followingTarget)
         {
             Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
             target.GetComponent<Renderer>().material = newMat;
-            gameObject.transform.position = Vector3.Lerp(transform.position, target.transform.position + new Vector3(0, 20, -30), 0.125f);
-            gameObject.transform.LookAt(target.transform);
-
-    }
-
-        else
-        {
-            gameObject.transform.position = Vector3.Lerp(transform.position, new Vector3(7, 209, -309), 0.125f);
+            transform.LookAt(target.transform);
         }
-
     }
 
     public void Follow(GameObject target)
     {
+        Camera.main.transform.SetParent(target.transform);
+        Camera.main.transform.localPosition = offset * -1;
         this.target = target;
         followingTarget = true;
     }

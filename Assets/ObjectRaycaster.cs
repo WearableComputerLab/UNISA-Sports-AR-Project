@@ -6,15 +6,7 @@ public class ObjectRaycaster : MonoBehaviour
 {
 
     public LayerMask mask;
-
     GameObject hitObject;
-
-        
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -31,14 +23,9 @@ public class ObjectRaycaster : MonoBehaviour
 
                 if (hitObject.GetComponent<PlayerBehaviour>() != null)
                 {
-                    hitObject.GetComponent<PlayerBehaviour>().OnRaycastHit();
-                }
-                
+                    hitObject.GetComponent<PlayerBehaviour>().Observe();
+                }           
             }
-
-        }
-       
+        }     
     }
-
-
 }

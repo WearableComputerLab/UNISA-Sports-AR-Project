@@ -7,19 +7,16 @@ using System.Globalization;
 public class PlayerBehaviour : MonoBehaviour
 {
     public string filePath;
+
     private string[][] data;
     private string[] lines;
     private int maxLines;
     private int startingTuple = -1;
-
-    //    [SerializeField] to display the values
     private float XPos;
     private float YPos;
     private DateTime prevTime;
     private DateTime currentTime;
     private double timeTaken = 0;
-
-
 
     public void ReadFile()
     {
@@ -69,14 +66,14 @@ public class PlayerBehaviour : MonoBehaviour
             {
                 startingTuple = i;
             }
-            gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
-            // Chaneg the float stuff if need be. It is behaving strangely
+            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            gameObject.transform.LookAt(newPos);
+            gameObject.transform.position = newPos;   
+            
         }
-
         i += 1;
         maxLines = lines.Length;
     }
-
  
     public void rewind(int i, int changeFactor)
     {
@@ -104,8 +101,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-
-    public void OnRaycastHit()
+    public void Observe()
     {
         GameObject trackedObj = GameObject.Find("Main Camera").GetComponent<CameraController>().target;
         Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
@@ -116,6 +112,16 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         GameObject.Find("Main Camera").GetComponent<CameraController>().Follow(gameObject);
+
+    }
+
+    public void DisplayDetails()
+    {
+        GameObject detailsBox = GameObject.Find("GameObject").GetComponent<PlayerController>().playerDetails;
+        detailsBox.SetActive(true);
+        detailsBox.GetComponent<TextBehaviour>().SetPlayer(gameObject);
+        detailsBox.GetComponent<TextBehaviour>().setTitle(data[5][0].Substring(8));
+        // Add more details
 
     }
 
@@ -134,7 +140,5 @@ public class PlayerBehaviour : MonoBehaviour
 
         return (float)scaledCoord;
     }
-
-
 
 }
