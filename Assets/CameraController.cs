@@ -8,6 +8,10 @@ public class CameraController : MonoBehaviour
     public GameObject target;
     private static Vector3 offset = new Vector3(0, -5, 10);
 
+    // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
+
+
+
     // Update is called once per frame
     void Update()
     {
@@ -16,6 +20,7 @@ public class CameraController : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.Escape)))
         {
             followingTarget = false;
+            target.GetComponent<PlayerBehaviour>().isWatched = false;
             target.GetComponent<Renderer>().material = origMat;
             Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
             Camera.main.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
@@ -37,5 +42,6 @@ public class CameraController : MonoBehaviour
         this.target = target;
         followingTarget = true;
     }
+
 
 }

@@ -17,6 +17,16 @@ public class PlayerBehaviour : MonoBehaviour
     private DateTime currentTime;
     private double timeTaken = 0;
 
+    // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
+    private float objPrevX;
+    private float objPrevY;
+
+    private float distTravelledX = 0;
+    private float distTravelledY = 0;
+
+    public bool isWatched = false;
+    private bool firstClick;
+
     public void ReadFile()
     {
         TextAsset file = Resources.Load(filePath) as TextAsset;
@@ -27,6 +37,7 @@ public class PlayerBehaviour : MonoBehaviour
             data[i] = lines[i].Split(',');
         }
     }
+
 
     public void Move(int i)
     {
@@ -66,14 +77,46 @@ public class PlayerBehaviour : MonoBehaviour
                 startingTuple = i;
             }
             Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
-            gameObject.transform.LookAt(newPos);
-            gameObject.transform.position = newPos;   
-            
+
+            distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
+            distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
+
+            if (isWatched)
+            {
+
+                if (((distTravelledX > 1.2) || (distTravelledY > 1.2)) || (firstClick))
+                {
+                    print("Camera rotated, obj travelled " + distTravelledX + " on the X axis and " + distTravelledY + " on the Y.");
+
+                    //gameObject.transform.LookAt(newPos);
+                    float speed = 0.8f;
+
+                    var playerRotation = Quaternion.LookRotation(newPos - transform.position);
+
+                    // Smoothly rotate towards the target point.
+                    transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
+
+
+                    distTravelledX = 0;
+                    distTravelledY = 0;
+                    firstClick = false;
+                }
+
+                else
+                {
+                    print("Camera didn't move, obj travelled " + distTravelledX + " on the X axis and " + distTravelledY + " on the Y.");
+                }
+
+                objPrevX = gameObject.transform.position.x;
+                objPrevY = gameObject.transform.position.y;
+            }
+            gameObject.transform.position = newPos;
+
         }
         i += 1;
         maxLines = lines.Length;
     }
- 
+
     public void rewind(int i, int changeFactor)
     {
         float prevPosX;
@@ -111,7 +154,10 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         GameObject.Find("Main Camera").GetComponent<CameraController>().Follow(gameObject);
-
+        objPrevX = gameObject.transform.position.x;
+        objPrevY = gameObject.transform.position.y;
+        isWatched = true;
+        firstClick = true;
     }
 
     public void DisplayDetails()

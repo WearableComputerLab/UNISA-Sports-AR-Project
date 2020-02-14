@@ -14,10 +14,10 @@ public class Dimensions : MonoBehaviour
      */
     // Values for simulation
     public static int scaleFactor = 400000;
-    public static int textBoxLowBoundX = -126;
-    public static int textBoxHighBoundX = 126;
+    public static int textBoxLowBoundX = -69;
+    public static int textBoxHighBoundX = 83;
     public static float cameraDefaultX = 7;
-    public static float cameraDefaultY = 225;
+    public static float cameraDefaultY = 255;
     public static float cameraDefaultZ = -445;
 
 

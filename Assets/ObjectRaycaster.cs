@@ -27,7 +27,6 @@ public class ObjectRaycaster : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-
             if (Physics.Raycast(ray, out hit))
             {
                 hitObject = hit.transform.gameObject;
