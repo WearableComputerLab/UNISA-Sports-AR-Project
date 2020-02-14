@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,7 +42,6 @@ public class CameraController : MonoBehaviour
         Camera.main.transform.localPosition = offset * -1;
         this.target = target;
         followingTarget = true;
+       
     }
-
-
 }

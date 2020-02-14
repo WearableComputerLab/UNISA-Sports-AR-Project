@@ -10,6 +10,8 @@ public class TextBehaviour : MonoBehaviour
     private float boundOffset;
     private float lowXBound = Dimensions.textBoxLowBoundX;
     private float highXBound = Dimensions.textBoxHighBoundX;
+
+    public float activationTime;
     
     // Update is called once per frame
     void Update()
@@ -34,6 +36,14 @@ public class TextBehaviour : MonoBehaviour
                 }
             }
         }
+
+        if(PlayerController.timer > (activationTime + 50 * Time.deltaTime))
+        {
+            print(PlayerController.timer);
+            gameObject.SetActive(false);
+
+        }
+
     }
 
     public void setTitle(string title){

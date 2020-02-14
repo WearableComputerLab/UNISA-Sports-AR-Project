@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private int timeIndex = 0;
     private int changeFactor = 700;
 
+    public static float timer = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
+
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             for (int i = 0; i < players.Length; i++)
@@ -62,7 +66,4 @@ public class PlayerController : MonoBehaviour
         timeIndex += 1;
         Thread.Sleep(40);
     }
-
-
-
 }

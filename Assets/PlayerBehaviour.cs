@@ -38,7 +38,6 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-
     public void Move(int i)
     {
         if (i >= lines.Length)
@@ -84,7 +83,7 @@ public class PlayerBehaviour : MonoBehaviour
             if (isWatched)
             {
 
-                if (((distTravelledX > 1.2) || (distTravelledY > 1.2)) || (firstClick))
+                if (((distTravelledX > 0.1) || (distTravelledY > 0.1)) || (firstClick))
                 {
                     print("Camera rotated, obj travelled " + distTravelledX + " on the X axis and " + distTravelledY + " on the Y.");
 
@@ -163,10 +162,11 @@ public class PlayerBehaviour : MonoBehaviour
     public void DisplayDetails()
     {
         GameObject detailsBox = GameObject.Find("GameObject").GetComponent<PlayerController>().playerDetails;
+        detailsBox.GetComponent<TextBehaviour>().activationTime = PlayerController.timer;
+
         detailsBox.SetActive(true);
         detailsBox.GetComponent<TextBehaviour>().SetPlayer(gameObject);
         detailsBox.GetComponent<TextBehaviour>().setTitle(data[5][0].Substring(8));
-        // Add more details
 
     }
 
