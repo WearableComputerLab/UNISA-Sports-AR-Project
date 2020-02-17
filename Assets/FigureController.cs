@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 
-public class PlayerController : MonoBehaviour
+public class FigureController : MonoBehaviour
 {
-    public GameObject player;
+    public GameObject playerSphere;
+    public GameObject playerFigure;
     public GameObject playerDetails;
-    GameObject[] players = new GameObject[6];
+    GameObject[] playerSpheres = new GameObject[6];
+    GameObject[] playerFigures = new GameObject[6];
     private int timeIndex = 0;
     private int changeFactor = 700;
 
@@ -24,14 +26,23 @@ public class PlayerController : MonoBehaviour
         filePaths[4] = "StewartP 2515 201005011354";
         filePaths[5] = "Thomas 2531 201005011355";
 
-        PlayerBehaviour pb;
+        FigureBehaviour fb;
+        SphereBehaviour sb;
 
         for (int i = 0; i < filePaths.Length; i++)
         {
-            players[i] = Instantiate(player);
-            pb = players[i].GetComponent<PlayerBehaviour>();
-            pb.filePath = filePaths[i];
-            pb.ReadFile();
+            playerSpheres[i] = Instantiate(playerSphere);
+            playerFigures[i] = Instantiate(playerFigure);
+
+            fb = playerFigures[i].GetComponent<FigureBehaviour>();
+            fb.filePath = filePaths[i];
+            fb.ReadFile();            
+            playerFigures[i].name = fb.playerName + " Figure";
+
+            sb = playerSpheres[i].GetComponent<SphereBehaviour>();
+            sb.playerName = fb.playerName;
+            playerSpheres[i].transform.parent = playerFigures[i].transform;
+            playerSpheres[i].name = sb.playerName + " Icon";
         }
     }
 
@@ -42,9 +53,9 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < playerFigures.Length; i++)
             {
-                players[i].GetComponent<PlayerBehaviour>().rewind(timeIndex, changeFactor);
+                playerFigures[i].GetComponent<FigureBehaviour>().Rewind(timeIndex, changeFactor);
             }
             if (timeIndex > changeFactor)
             {
@@ -58,12 +69,12 @@ public class PlayerController : MonoBehaviour
 
         else
         {
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < playerFigures.Length; i++)
             {
-                players[i].GetComponent<PlayerBehaviour>().Move(timeIndex);
+                playerFigures[i].GetComponent<FigureBehaviour>().Move(timeIndex);
             }
         }
         timeIndex += 1;
-        Thread.Sleep(40);
+//        Thread.Sleep(40);
     }
 }

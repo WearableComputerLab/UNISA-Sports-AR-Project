@@ -37,16 +37,16 @@ public class TextBehaviour : MonoBehaviour
             }
         }
 
-        if(PlayerController.timer > (activationTime + 50 * Time.deltaTime))
+        if(FigureController.timer > (activationTime + 50 * Time.deltaTime))
         {
-            print(PlayerController.timer);
+            print(FigureController.timer);
             gameObject.SetActive(false);
 
         }
 
     }
 
-    public void setTitle(string title){
+    public void SetTitle(string title){
 
         gameObject.transform.Find("Title").GetComponent<TextMeshPro>().text = title;
     }

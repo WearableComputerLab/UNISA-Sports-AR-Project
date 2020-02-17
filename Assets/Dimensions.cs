@@ -19,6 +19,7 @@ public class Dimensions : MonoBehaviour
     public static float cameraDefaultX = 7;
     public static float cameraDefaultY = 255;
     public static float cameraDefaultZ = -445;
+    public static float sphereElevation = 80;
 
 
 }

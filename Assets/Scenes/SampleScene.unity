@@ -625,6 +625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plane: {fileID: 2132096758}
+  activationTime: 0
 --- !u!1 &1956971122
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,7 +656,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0569ed859cc8fc440a19df1a6c50fc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6651289193898400361, guid: a1ee64c770f0cae4cbdd62719bd87b96, type: 3}
+  playerSphere: {fileID: 6651289193898400361, guid: a1ee64c770f0cae4cbdd62719bd87b96,
+    type: 3}
+  playerFigure: {fileID: 8905118490394062960, guid: 3051de1152151fb47bc1cff844f86463,
+    type: 3}
   playerDetails: {fileID: 1370198046}
 --- !u!4 &1956971124
 Transform:

@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.Escape)))
         {
             followingTarget = false;
-            target.GetComponent<PlayerBehaviour>().isWatched = false;
+            target.GetComponent<SphereBehaviour>().isWatched = false;
             target.GetComponent<Renderer>().material = origMat;
             Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
             Camera.main.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
