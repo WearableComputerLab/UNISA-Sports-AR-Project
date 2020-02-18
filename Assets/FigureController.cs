@@ -5,12 +5,12 @@ using System.Threading;
 
 public class FigureController : MonoBehaviour
 {
+    GameObject[] playerSpheres = new GameObject[6];
+    GameObject[] playerFigures = new GameObject[6];
+
     public GameObject playerSphere;
     public GameObject playerFigure;
     public GameObject playerDetails;
-
-    GameObject[] playerSpheres = new GameObject[6];
-    GameObject[] playerFigures = new GameObject[6];
 
     private int timeIndex = 0;
     private int changeFactor = 700;
@@ -33,20 +33,19 @@ public class FigureController : MonoBehaviour
 
         for (int i = 0; i < filePaths.Length; i++)
         {
-            playerFigures[i] = Instantiate(playerFigure); 
+            playerFigures[i] = Instantiate(playerFigure);
             fb = playerFigures[i].GetComponent<FigureBehaviour>();
             fb.filePath = filePaths[i];
             fb.ReadFile();
-            fb.icon = playerSpheres[i];
             playerFigures[i].name = fb.playerName + " Figure";
 
-            playerSpheres[i] = Instantiate(playerSphere);                 
+            playerSpheres[i] = Instantiate(playerSphere);
             sb = playerSpheres[i].GetComponent<SphereBehaviour>();
             sb.figure = playerFigures[i];
             sb.playerName = fb.playerName;
-
             playerSpheres[i].name = sb.playerName + " Icon";
-            playerSpheres[i].transform.localPosition += new Vector3(-0.4f, 1f, -0.4f);
+
+            fb.icon = playerSpheres[i];
         }
     }
 
@@ -57,20 +56,8 @@ public class FigureController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            for (int i = 0; i < playerFigures.Length; i++)
-            {
-                playerFigures[i].GetComponent<FigureBehaviour>().Rewind(timeIndex, changeFactor);
-            }
-            if (timeIndex > changeFactor)
-            {
-                timeIndex -= changeFactor;
-            }
-            else
-            {
-                timeIndex = 0;
-            }
+            Rewind();
         }
-
         else
         {
             for (int i = 0; i < playerFigures.Length; i++)
@@ -79,13 +66,22 @@ public class FigureController : MonoBehaviour
             }
         }
         timeIndex += 1;
-//        Thread.Sleep(40);
+        //        Thread.Sleep(40);
     }
 
     private void Rewind()
     {
-
-
+        for (int i = 0; i < playerFigures.Length; i++)
+        {
+            playerFigures[i].GetComponent<FigureBehaviour>().Rewind(timeIndex, changeFactor);
+        }
+        if (timeIndex > changeFactor)
+        {
+            timeIndex -= changeFactor;
+        }
+        else
+        {
+            timeIndex = 0;
+        }
     }
-
-}
+}    

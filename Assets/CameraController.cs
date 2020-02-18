@@ -7,9 +7,7 @@ public class CameraController : MonoBehaviour
 {
     private bool followingTarget = false;
     public GameObject target;
-    private static Vector3 offset = new Vector3(0, -5, 10);
-
-    // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
+    private static Vector3 offset = new Vector3(0, -12, 0);
 
 
 
@@ -23,9 +21,9 @@ public class CameraController : MonoBehaviour
             followingTarget = false;
             target.GetComponent<SphereBehaviour>().isWatched = false;
             target.GetComponent<Renderer>().material = origMat;
-            Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
-            Camera.main.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
-            Camera.main.transform.parent = null;
+            gameObject.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
+            gameObject.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
+            gameObject.transform.parent = null;
         }
 
         if (followingTarget)
@@ -33,18 +31,31 @@ public class CameraController : MonoBehaviour
             var sb = target.GetComponent<SphereBehaviour>();
             Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
             target.GetComponent<Renderer>().material = newMat;
-          
-            transform.LookAt(sb.figure.transform);
-            
+            Follow(target);
         }
     }
 
-    public void Follow(GameObject target)
+    public void LaunchFollowMode(GameObject target)
     {
-        Camera.main.transform.SetParent(target.GetComponent<SphereBehaviour>().figure.transform);
-        Camera.main.transform.localPosition = offset * -1;
+        gameObject.transform.SetParent(target.GetComponent<FigureBehaviour>().transform);
+
+        if (!followingTarget)
+        {
+            gameObject.transform.position -= offset;
+        }
+
         this.target = target;
-        followingTarget = true;
-       
+        followingTarget = true;       
+    }
+
+    public void Follow(GameObject figure)
+    {
+        FigureBehaviour fb = figure.GetComponent<FigureBehaviour>();
+
+        if ((fb.distTravelledX > 0.1) && (fb.distTravelledX > 0.1))
+        {
+            transform.LookAt(figure.transform);
+        }
+
     }
 }

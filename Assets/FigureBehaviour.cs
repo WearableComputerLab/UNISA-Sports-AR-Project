@@ -9,11 +9,15 @@ public class FigureBehaviour : MonoBehaviour
     public string filePath;
     private string[][] data;
     private string[] lines;
-    private int maxLines;
     private int startingTuple = -1;
 
-    private float XPos;
-    private float YPos;
+    public string playerName;
+    private Animator animator;
+
+    public GameObject icon;     // The icon which follows it
+
+    private float XPos; // Current horiz position
+    private float YPos; // Current vert position
 
     private DateTime prevTime;
     private DateTime currentTime;
@@ -22,18 +26,10 @@ public class FigureBehaviour : MonoBehaviour
     // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
     private float objPrevX;
     private float objPrevY;
+    public float distTravelledX = 0;
+    public float distTravelledY = 0;
 
-    private float distTravelledX = 0;
-    private float distTravelledY = 0;
-
-    public bool isWatched = false;
-    private bool firstClick;
-
-    public string playerName;
-    private Animator animator;
-
-    public GameObject icon;
-
+       
     public void Start()
     {
         animator = gameObject.GetComponent<Animator>();
@@ -99,39 +95,18 @@ public class FigureBehaviour : MonoBehaviour
 
             if ((distTravelledX > 0.1) || (distTravelledY > 0.1)) {
 
-                icon.transform.position = gameObject.transform.position;
-                icon.transform.localPosition += new Vector3(0, 60f, 0);
-
+                icon.GetComponent<SphereBehaviour>().Move(newPos);
                 var rotation = Quaternion.LookRotation(newPos - transform.position);
-
                 // Smoothly rotate towards the target point.
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Dimensions.speed * Time.deltaTime);
-
                 distTravelledX = 0;
                 distTravelledY = 0;
             }
 
-            if (isWatched)
-            {
-                if (((distTravelledX > 0.1) || (distTravelledY > 0.1)) || (firstClick))
-                {              
-                    var rotation = Quaternion.LookRotation(newPos - transform.position);
-
-                    // Smoothly rotate towards the target point.
-                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Dimensions.speed * Time.deltaTime);
-
-                    distTravelledX = 0;
-                    distTravelledY = 0;
-                    firstClick = false;
-                }
-                objPrevX = gameObject.transform.position.x;
-                objPrevY = gameObject.transform.position.y;
-            }
             gameObject.transform.position = newPos;
 
         }
         i += 1;
-        maxLines = lines.Length;
     }
 
     public void Rewind(int i, int changeFactor)
