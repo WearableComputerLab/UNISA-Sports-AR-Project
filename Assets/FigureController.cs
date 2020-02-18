@@ -47,7 +47,7 @@ public class FigureController : MonoBehaviour
             sb.playerName = fb.playerName;
 
             playerSpheres[i].name = sb.playerName + " Icon";
-        //    playerSpheres[i].transform.localPosition += new Vector3(-0.4f, 1f, -0.4f);
+            playerSpheres[i].transform.localPosition += new Vector3(-0.4f, 1f, -0.4f);
         }
     }
 

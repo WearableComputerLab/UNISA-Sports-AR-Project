@@ -30,15 +30,18 @@ public class CameraController : MonoBehaviour
 
         if (followingTarget)
         {
+            var sb = target.GetComponent<SphereBehaviour>();
             Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
             target.GetComponent<Renderer>().material = newMat;
-            transform.LookAt(target.GetComponent<SphereBehaviour>().figure.transform);
+          
+            transform.LookAt(sb.figure.transform);
+            
         }
     }
 
     public void Follow(GameObject target)
     {
-        Camera.main.transform.SetParent(target.transform);
+        Camera.main.transform.SetParent(target.GetComponent<SphereBehaviour>().figure.transform);
         Camera.main.transform.localPosition = offset * -1;
         this.target = target;
         followingTarget = true;
