@@ -33,15 +33,14 @@ public class FigureController : MonoBehaviour
 
         for (int i = 0; i < filePaths.Length; i++)
         {
-            playerSpheres[i] = Instantiate(playerSphere);
-            playerFigures[i] = Instantiate(playerFigure);
-
+            playerFigures[i] = Instantiate(playerFigure); 
             fb = playerFigures[i].GetComponent<FigureBehaviour>();
             fb.filePath = filePaths[i];
             fb.ReadFile();
             fb.icon = playerSpheres[i];
             playerFigures[i].name = fb.playerName + " Figure";
 
+            playerSpheres[i] = Instantiate(playerSphere);                 
             sb = playerSpheres[i].GetComponent<SphereBehaviour>();
             sb.figure = playerFigures[i];
             sb.playerName = fb.playerName;
@@ -82,4 +81,11 @@ public class FigureController : MonoBehaviour
         timeIndex += 1;
 //        Thread.Sleep(40);
     }
+
+    private void Rewind()
+    {
+
+
+    }
+
 }
