@@ -97,7 +97,7 @@ public class FigureBehaviour : MonoBehaviour
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
 
-        /*    if ((distTravelledX > 0.1) || (distTravelledY > 0.1)) {
+            if ((distTravelledX > 0.1) || (distTravelledY > 0.1)) {
 
                 icon.transform.position = gameObject.transform.position;
                 icon.transform.localPosition += new Vector3(0, 60f, 0);
@@ -109,7 +109,7 @@ public class FigureBehaviour : MonoBehaviour
 
                 distTravelledX = 0;
                 distTravelledY = 0;
-            }*/
+            }
 
             if (isWatched)
             {
