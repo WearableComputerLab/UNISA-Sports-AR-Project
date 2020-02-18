@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
         {
             Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
             target.GetComponent<Renderer>().material = newMat;
-            transform.LookAt(target.transform);
+            transform.LookAt(target.GetComponent<SphereBehaviour>().figure.transform);
         }
     }
 

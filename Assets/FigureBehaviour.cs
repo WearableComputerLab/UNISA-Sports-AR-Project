@@ -11,8 +11,10 @@ public class FigureBehaviour : MonoBehaviour
     private string[] lines;
     private int maxLines;
     private int startingTuple = -1;
+
     private float XPos;
     private float YPos;
+
     private DateTime prevTime;
     private DateTime currentTime;
     private double timeTaken = 0;
@@ -30,10 +32,11 @@ public class FigureBehaviour : MonoBehaviour
     public string playerName;
     private Animator animator;
 
+    public GameObject icon;
+
     public void Start()
     {
         animator = gameObject.GetComponent<Animator>();
-
     }
 
     public void ReadFile()
@@ -85,25 +88,37 @@ public class FigureBehaviour : MonoBehaviour
                 startingTuple = i;
             }
             
-            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, Dimensions.sphereElevation, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, Dimensions.figureElevation, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
             // animator.SetFloat("Speed", (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            gameObject.transform.LookAt(newPos);
+
             animator.SetFloat("Speed", newPos.magnitude);
 
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
 
+        /*    if ((distTravelledX > 0.1) || (distTravelledY > 0.1)) {
+
+                icon.transform.position = gameObject.transform.position;
+                icon.transform.localPosition += new Vector3(0, 60f, 0);
+
+                var rotation = Quaternion.LookRotation(newPos - transform.position);
+
+                // Smoothly rotate towards the target point.
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Dimensions.speed * Time.deltaTime);
+
+                distTravelledX = 0;
+                distTravelledY = 0;
+            }*/
+
             if (isWatched)
             {
-
                 if (((distTravelledX > 0.1) || (distTravelledY > 0.1)) || (firstClick))
-                {
-                    //gameObject.transform.LookAt(newPos);
-                    float speed = 0.8f;
-
-                    var playerRotation = Quaternion.LookRotation(newPos - transform.position);
+                {              
+                    var rotation = Quaternion.LookRotation(newPos - transform.position);
 
                     // Smoothly rotate towards the target point.
-                    transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Dimensions.speed * Time.deltaTime);
 
                     distTravelledX = 0;
                     distTravelledY = 0;
@@ -130,7 +145,7 @@ public class FigureBehaviour : MonoBehaviour
             {
                 prevPosX = GetLat(Convert.ToDouble(data[i - changeFactor][5].Substring(1)));
                 prevPosY = GetLong(Convert.ToDouble(data[i - changeFactor][6].Substring(1)));
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, Dimensions.sphereElevation, prevPosY), 10f);
+                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, Dimensions.figureElevation, prevPosY), 10f);
             }
 
             else
@@ -139,40 +154,10 @@ public class FigureBehaviour : MonoBehaviour
                 {
                     prevPosX = GetLat(Convert.ToDouble(data[startingTuple][5].Substring(1)));
                     prevPosY = GetLong(Convert.ToDouble(data[startingTuple][6].Substring(1)));
-                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, Dimensions.sphereElevation, prevPosY), 10f);
+                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, Dimensions.figureElevation, prevPosY), 10f);
                 }
             }
         }
-    }
-
-    public void Observe()
-    {
-        GameObject trackedObj = GameObject.Find("Main Camera").GetComponent<CameraController>().target;
-        Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
-
-        if (trackedObj != null)
-        {
-            trackedObj.GetComponent<Renderer>().material = origMat;
-        }
-
-        GameObject.Find("Main Camera").GetComponent<CameraController>().Follow(gameObject);
-        objPrevX = gameObject.transform.position.x;
-        objPrevY = gameObject.transform.position.y;
-        isWatched = true;
-        firstClick = true;
-    }
-
-    public void DisplayDetails()
-    {
-        GameObject detailsBox = GameObject.Find("GameObject").GetComponent<FigureController>().playerDetails;
-        TextBehaviour tb = detailsBox.GetComponent<TextBehaviour>();
-
-        tb.activationTime = FigureController.timer;
-
-        detailsBox.SetActive(true);
-        tb.SetPlayer(gameObject);
-        tb.SetTitle(playerName);
-
     }
 
     private float GetLong(double longCoord)

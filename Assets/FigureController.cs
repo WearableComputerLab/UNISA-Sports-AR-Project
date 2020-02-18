@@ -8,8 +8,10 @@ public class FigureController : MonoBehaviour
     public GameObject playerSphere;
     public GameObject playerFigure;
     public GameObject playerDetails;
+
     GameObject[] playerSpheres = new GameObject[6];
     GameObject[] playerFigures = new GameObject[6];
+
     private int timeIndex = 0;
     private int changeFactor = 700;
 
@@ -36,13 +38,16 @@ public class FigureController : MonoBehaviour
 
             fb = playerFigures[i].GetComponent<FigureBehaviour>();
             fb.filePath = filePaths[i];
-            fb.ReadFile();            
+            fb.ReadFile();
+            fb.icon = playerSpheres[i];
             playerFigures[i].name = fb.playerName + " Figure";
 
             sb = playerSpheres[i].GetComponent<SphereBehaviour>();
+            sb.figure = playerFigures[i];
             sb.playerName = fb.playerName;
-            playerSpheres[i].transform.parent = playerFigures[i].transform;
+
             playerSpheres[i].name = sb.playerName + " Icon";
+        //    playerSpheres[i].transform.localPosition += new Vector3(-0.4f, 1f, -0.4f);
         }
     }
 

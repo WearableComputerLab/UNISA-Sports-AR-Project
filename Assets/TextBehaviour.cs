@@ -43,8 +43,7 @@ public class TextBehaviour : MonoBehaviour
             gameObject.SetActive(false);
 
         }
-
-    }
+                 }
 
     public void SetTitle(string title){
 

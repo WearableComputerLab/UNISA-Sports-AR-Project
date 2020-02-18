@@ -13,13 +13,15 @@ public class Dimensions : MonoBehaviour
      * Probably need to change some or all of the following, if changing size of virtual stadium
      */
     // Values for simulation
+
+    public static float speed = 0.8f;
     public static int scaleFactor = 400000;
     public static int textBoxLowBoundX = -69;
     public static int textBoxHighBoundX = 83;
     public static float cameraDefaultX = 7;
     public static float cameraDefaultY = 255;
     public static float cameraDefaultZ = -445;
-    public static float sphereElevation = 80;
+    public static float figureElevation = 0;
 
 
 }
