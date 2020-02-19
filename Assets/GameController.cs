@@ -8,7 +8,9 @@ public class GameController : MonoBehaviour
     public GameObject icon;
     public GameObject figure;
     public GameObject playerDetails;
+
     GameObject[] icons = new GameObject[6];
+
     private int timeIndex = 0;
     public bool isRewinding;
     private int rewindStartIndex = -1;
@@ -35,6 +37,9 @@ public class GameController : MonoBehaviour
             pb = icons[i].GetComponent<IconBehaviour>();
             pb.filePath = filePaths[i];
             pb.ReadFile();
+
+
+
         }
 
     }

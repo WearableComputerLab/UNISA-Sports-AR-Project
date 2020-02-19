@@ -45,38 +45,7 @@ public class IconBehaviour : MonoBehaviour
 
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
-            if (data[timeIndex][0].Length == 7)
-            {
-                prevTime = currentTime;
-                currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
-                timeTaken = (currentTime - prevTime).TotalMilliseconds;
-            }
-            else if (data[timeIndex][0].Length == 8)
-            {
-                prevTime = currentTime;
-                currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
-                timeTaken = (currentTime - prevTime).TotalMilliseconds;
-            }
-
-            if (data[timeIndex][5] != " ----")
-            {
-                XPos = getLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
-            }
-            else
-            {
-                XPos = 0;
-            }
-
-            if (data[timeIndex][6] != " ----")
-            {
-                YPos = getLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
-            }
-            else
-            {
-                YPos = 0;
-            }
-
-            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, Dimensions.sphereElevation, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, getNewPos(timeIndex), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
 
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
@@ -112,37 +81,8 @@ public class IconBehaviour : MonoBehaviour
     {
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
-            if (data[timeIndex][0].Length == 7)
-            {
-                prevTime = currentTime;
-                currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
-                timeTaken = (currentTime - prevTime).TotalMilliseconds;
-            }
-            else if (data[timeIndex][0].Length == 8)
-            {
-                prevTime = currentTime;
-                currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
-                timeTaken = (currentTime - prevTime).TotalMilliseconds;
-            }
-
-            if (data[timeIndex][5] != " ----")
-            {
-                XPos = getLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
-            }
-            else
-            {
-                XPos = 0;
-            }
-
-            if (data[timeIndex][6] != " ----")
-            {
-                YPos = getLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
-            }
-            else
-            {
-                YPos = 0;
-            }
-            gameObject.transform.position = new Vector3(XPos, Dimensions.sphereElevation, YPos);
+           
+            gameObject.transform.position = getNewPos(timeIndex);
         }
     }
     public void Observe()
@@ -171,6 +111,42 @@ public class IconBehaviour : MonoBehaviour
         detailsBox.GetComponent<TextBehaviour>().SetPlayer(gameObject);
         detailsBox.GetComponent<TextBehaviour>().setTitle(data[5][0].Substring(8));
 
+    }
+
+    private Vector3 getNewPos(int timeIndex)
+    {
+        if (data[timeIndex][0].Length == 7)
+        {
+            prevTime = currentTime;
+            currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
+            timeTaken = (currentTime - prevTime).TotalMilliseconds;
+        }
+        else if (data[timeIndex][0].Length == 8)
+        {
+            prevTime = currentTime;
+            currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
+            timeTaken = (currentTime - prevTime).TotalMilliseconds;
+        }
+
+        if (data[timeIndex][5] != " ----")
+        {
+            XPos = getLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
+        }
+        else
+        {
+            XPos = 0;
+        }
+
+        if (data[timeIndex][6] != " ----")
+        {
+            YPos = getLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
+        }
+        else
+        {
+            YPos = 0;
+        }
+
+        return new Vector3(XPos, Dimensions.sphereElevation, YPos);
     }
 
     private float getLong(double longCoord)
