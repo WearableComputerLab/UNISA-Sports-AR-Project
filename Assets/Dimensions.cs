@@ -21,7 +21,7 @@ public class Dimensions : MonoBehaviour
     public static float cameraDefaultZ = -445;
     public static int rewindFactor = 100;
 
-    public static float sphereElevation = 19;
+    public static float sphereElevation = 72;
 
 
 }

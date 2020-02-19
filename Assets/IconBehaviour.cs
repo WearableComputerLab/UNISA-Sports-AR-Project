@@ -25,6 +25,8 @@ public class IconBehaviour : MonoBehaviour
     public bool isWatched = false;
     private bool firstClick;
 
+    public GameObject figure;
+
     public void ReadFile()
     {
         TextAsset file = Resources.Load(filePath) as TextAsset;
@@ -45,24 +47,26 @@ public class IconBehaviour : MonoBehaviour
 
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
-            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, getNewPos(timeIndex), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            float speed = (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken);
+            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, getNewPos(timeIndex), speed);
+
+            // Tell fig to move
+            GameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), speed);
 
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
 
             if (isWatched)
             {
-
                 if (((distTravelledX > 0.1) || (distTravelledY > 0.1)) || (firstClick))
                 {
                     //gameObject.transform.LookAt(newPos);
-                    float speed = 0.8f;
+                    speed = 0.8f;
 
                     var playerRotation = Quaternion.LookRotation(newPos - transform.position);
 
                     // Smoothly rotate towards the target point.
                     transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
-
 
                     distTravelledX = 0;
                     distTravelledY = 0;
@@ -73,18 +77,18 @@ public class IconBehaviour : MonoBehaviour
                 objPrevY = gameObject.transform.position.y;
             }
             gameObject.transform.position = newPos;
-
         }
     }
 
     public void Teleport(int timeIndex)
     {
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
-        {
-           
+        {           
             gameObject.transform.position = getNewPos(timeIndex);
+            GameController.TeleportFigure(figure, new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z));
         }
     }
+
     public void Observe()
     {
         GameObject trackedObj = GameObject.Find("Main Camera").GetComponent<CameraController>().target;
@@ -106,11 +110,9 @@ public class IconBehaviour : MonoBehaviour
     {
         GameObject detailsBox = GameObject.Find("GameObject").GetComponent<GameController>().playerDetails;
         detailsBox.GetComponent<TextBehaviour>().activationTime = GameController.timer;
-
         detailsBox.SetActive(true);
         detailsBox.GetComponent<TextBehaviour>().SetPlayer(gameObject);
         detailsBox.GetComponent<TextBehaviour>().setTitle(data[5][0].Substring(8));
-
     }
 
     private Vector3 getNewPos(int timeIndex)

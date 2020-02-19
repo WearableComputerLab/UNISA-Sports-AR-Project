@@ -10,9 +10,10 @@ public class GameController : MonoBehaviour
     public GameObject playerDetails;
 
     GameObject[] icons = new GameObject[6];
+    GameObject[] figures = new GameObject[6];
 
     private int timeIndex = 0;
-    public bool isRewinding;
+    private bool isRewinding;
     private int rewindStartIndex = -1;
     public GameObject RewindText;
 
@@ -38,6 +39,8 @@ public class GameController : MonoBehaviour
             pb.filePath = filePaths[i];
             pb.ReadFile();
 
+            figures[i] = Instantiate(figure);
+            pb.figure = figures[i]; // assign a figure to the relevant icon
 
 
         }
@@ -80,10 +83,6 @@ public class GameController : MonoBehaviour
         Thread.Sleep(40);
     }
 
-    
-
-
-    // WAS WORKING, NOT ANYMORE :(
     private void Rewind()
     {
         if (rewindStartIndex == -1)
@@ -105,4 +104,13 @@ public class GameController : MonoBehaviour
 
     }
 
+    public static void MoveFigure(GameObject figure, Vector3 pos, float speed)
+    {
+        figure.GetComponent<FigureBehaviour>().Move(pos, speed);
+    }
+
+    public static void TeleportFigure(GameObject figure, Vector3 pos)
+    {
+        figure.GetComponent<FigureBehaviour>().Teleport(pos);
+    }
 }
