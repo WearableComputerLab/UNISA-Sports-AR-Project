@@ -17,7 +17,7 @@ public class ObjectRaycaster : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             hitObject = hit.transform.gameObject;
-            PlayerBehaviour objBehaviour = hitObject.GetComponent<PlayerBehaviour>();
+            IconBehaviour objBehaviour = hitObject.GetComponent<IconBehaviour>();
 
             if (objBehaviour != null)
             {
@@ -30,7 +30,7 @@ public class ObjectRaycaster : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 hitObject = hit.transform.gameObject;
-                PlayerBehaviour objBehaviour = hitObject.GetComponent<PlayerBehaviour>();
+                IconBehaviour objBehaviour = hitObject.GetComponent<IconBehaviour>();
 
                 if (objBehaviour != null)
                 {

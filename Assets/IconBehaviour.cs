@@ -4,13 +4,11 @@ using UnityEngine;
 using System;
 using System.Globalization;
 
-public class PlayerBehaviour : MonoBehaviour
+public class IconBehaviour : MonoBehaviour
 {
     public string filePath;
     private string[][] data;
     private string[] lines;
-    private int maxLines;
-    private int startingTuple = -1;
     private float XPos;
     private float YPos;
     private DateTime prevTime;
@@ -38,43 +36,46 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    public void Move(int i)
+    public void Move(int timeIndex)
     {
-        if (i >= lines.Length)
+        if (timeIndex >= lines.Length)
         {
-            i = 0;
+            timeIndex = 0;
         }
 
-        if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
+        if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
-
-            if (data[i][0].Length == 7)
+            if (data[timeIndex][0].Length == 7)
             {
                 prevTime = currentTime;
-                currentTime = DateTime.ParseExact(data[i][0], "m:ss.ff", CultureInfo.InvariantCulture);
+                currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
                 timeTaken = (currentTime - prevTime).TotalMilliseconds;
             }
-            else if (data[i][0].Length == 8)
+            else if (data[timeIndex][0].Length == 8)
             {
                 prevTime = currentTime;
-                currentTime = DateTime.ParseExact(data[i][0], "mm:ss.ff", CultureInfo.InvariantCulture);
+                currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
                 timeTaken = (currentTime - prevTime).TotalMilliseconds;
             }
 
-            if (data[i][5] != " ----")
+            if (data[timeIndex][5] != " ----")
             {
-                XPos = getLat(Convert.ToDouble(data[i][5].Substring(1)));
+                XPos = getLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
+            }
+            else
+            {
+                XPos = 0;
             }
 
-            if (data[i][6] != " ----")
+            if (data[timeIndex][6] != " ----")
             {
-                YPos = getLong(Convert.ToDouble(data[i][6].Substring(1)));
+                YPos = getLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
+            }
+            else
+            {
+                YPos = 0;
             }
 
-            if (((data[i][6] != " ----") && (data[i][5] != " ----")) && (startingTuple != -1))
-            {
-                startingTuple = i;
-            }
             Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
 
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
@@ -85,8 +86,6 @@ public class PlayerBehaviour : MonoBehaviour
 
                 if (((distTravelledX > 0.1) || (distTravelledY > 0.1)) || (firstClick))
                 {
-                    print("Camera rotated, obj travelled " + distTravelledX + " on the X axis and " + distTravelledY + " on the Y.");
-
                     //gameObject.transform.LookAt(newPos);
                     float speed = 0.8f;
 
@@ -101,47 +100,51 @@ public class PlayerBehaviour : MonoBehaviour
                     firstClick = false;
                 }
 
-                else
-                {
-                    print("Camera didn't move, obj travelled " + distTravelledX + " on the X axis and " + distTravelledY + " on the Y.");
-                }
-
                 objPrevX = gameObject.transform.position.x;
                 objPrevY = gameObject.transform.position.y;
             }
             gameObject.transform.position = newPos;
 
         }
-        i += 1;
-        maxLines = lines.Length;
     }
 
-    public void rewind(int i, int changeFactor)
+    public void Teleport(int timeIndex)
     {
-        float prevPosX;
-        float prevPosY;
-
-        if ((i >= 9) && (!String.IsNullOrEmpty(lines[i])))
+        if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
-            if ((i >= changeFactor) && (data[i - changeFactor][5] != " ----"))
+            if (data[timeIndex][0].Length == 7)
             {
-                prevPosX = getLat(Convert.ToDouble(data[i - changeFactor][5].Substring(1)));
-                prevPosY = getLong(Convert.ToDouble(data[i - changeFactor][6].Substring(1)));
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, 12, prevPosY), 10f);
+                prevTime = currentTime;
+                currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
+                timeTaken = (currentTime - prevTime).TotalMilliseconds;
+            }
+            else if (data[timeIndex][0].Length == 8)
+            {
+                prevTime = currentTime;
+                currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
+                timeTaken = (currentTime - prevTime).TotalMilliseconds;
             }
 
+            if (data[timeIndex][5] != " ----")
+            {
+                XPos = getLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
+            }
             else
             {
-                if (startingTuple != -1)
-                {
-                    prevPosX = getLat(Convert.ToDouble(data[startingTuple][5].Substring(1)));
-                    prevPosY = getLong(Convert.ToDouble(data[startingTuple][6].Substring(1)));
-                    gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(prevPosX, 12, prevPosY), 10f);
-                }
+                XPos = 0;
             }
+
+            if (data[timeIndex][6] != " ----")
+            {
+                YPos = getLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
+            }
+            else
+            {
+                YPos = 0;
+            }
+            gameObject.transform.position = new Vector3(XPos, 12, YPos);
         }
     }
-
     public void Observe()
     {
         GameObject trackedObj = GameObject.Find("Main Camera").GetComponent<CameraController>().target;
@@ -161,8 +164,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void DisplayDetails()
     {
-        GameObject detailsBox = GameObject.Find("GameObject").GetComponent<PlayerController>().playerDetails;
-        detailsBox.GetComponent<TextBehaviour>().activationTime = PlayerController.timer;
+        GameObject detailsBox = GameObject.Find("GameObject").GetComponent<GameController>().playerDetails;
+        detailsBox.GetComponent<TextBehaviour>().activationTime = GameController.timer;
 
         detailsBox.SetActive(true);
         detailsBox.GetComponent<TextBehaviour>().SetPlayer(gameObject);
