@@ -76,7 +76,7 @@ public class IconBehaviour : MonoBehaviour
                 YPos = 0;
             }
 
-            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, 12, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
+            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, new Vector3(XPos, Dimensions.sphereElevation, YPos), (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken));
 
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
@@ -142,7 +142,7 @@ public class IconBehaviour : MonoBehaviour
             {
                 YPos = 0;
             }
-            gameObject.transform.position = new Vector3(XPos, 12, YPos);
+            gameObject.transform.position = new Vector3(XPos, Dimensions.sphereElevation, YPos);
         }
     }
     public void Observe()
