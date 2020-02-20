@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour
         Thread.Sleep(40);
     }
 
-    private void Rewind()
+    public void Rewind()
     {
         if (rewindStartIndex == -1)
         {
