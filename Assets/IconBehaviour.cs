@@ -102,7 +102,7 @@ public class IconBehaviour : MonoBehaviour
             trackedObj.GetComponent<Renderer>().material = origMat;
         }
 
-        GameObject.Find("Main Camera").GetComponent<CameraController>().Follow(gameObject);
+        GameObject.Find("Main Camera").GetComponent<CameraController>().EnterFollowMode(gameObject);
         objPrevX = gameObject.transform.position.x;
         objPrevY = gameObject.transform.position.y;
         isWatched = true;

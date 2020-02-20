@@ -41,7 +41,7 @@ public class GameController : MonoBehaviour
 
             figures[i] = Instantiate(figure, new Vector3(Dimensions.runOnX, 0, Dimensions.runOnZ), Quaternion.identity);
             ib.figure = figures[i]; // assign a figure to the relevant icon
-            
+
             figures[i].name = ib.Name() + " Figure";
             icons[i].name = ib.Name() + " Icon";
         }
@@ -52,13 +52,13 @@ public class GameController : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if(timeIndex >= rewindStartIndex)
+        if (timeIndex >= rewindStartIndex)
         {
             isRewinding = false;
             rewindStartIndex = -1;
         }
 
-        if(isRewinding)
+        if (isRewinding)
         {
             RewindText.SetActive(true);
         }
@@ -83,6 +83,23 @@ public class GameController : MonoBehaviour
         Thread.Sleep(40);
     }
 
+    private void OnGUI()
+    {
+        GUIStyle guiStyle = new GUIStyle(GUI.skin.button);
+
+        guiStyle.fontSize = 50;
+
+        if (GUI.Button(new Rect(45, 1200, 170, 150), "Replay", guiStyle))
+        {
+            Rewind();
+        }
+
+        if (GUI.Button(new Rect(280, 1200, 240, 150), "Main View", guiStyle))
+        {
+            Camera.main.GetComponent<CameraController>().LeaveFollowMode();
+        }
+    }
+
     public void Rewind()
     {
         if (rewindStartIndex == -1)
@@ -103,9 +120,9 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public static void MoveFigure(GameObject figure, Vector3 pos, float speed, float GoodSpeed)
+    public static void MoveFigure(GameObject figure, Vector3 pos, float speed, float adjustedSpeed)
     {
-        figure.GetComponent<FigureBehaviour>().Move(pos, speed, GoodSpeed);
+        figure.GetComponent<FigureBehaviour>().Move(pos, speed, adjustedSpeed);
     }
 
     public static void TeleportFigure(GameObject figure, Vector3 pos)

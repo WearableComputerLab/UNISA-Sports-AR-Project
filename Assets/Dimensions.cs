@@ -25,7 +25,7 @@ public class Dimensions : MonoBehaviour
 
     public static int rewindFactor = 100;
 
-    public static float sphereElevation = 72;
+    public static float sphereElevation = 87;
 
     public static float runOnX = -400;
     public static float runOnZ = 0;
