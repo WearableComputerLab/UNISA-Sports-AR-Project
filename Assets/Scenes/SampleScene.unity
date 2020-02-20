@@ -357,15 +357,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.26410875, y: 0, z: 0, w: 0.9644929}
-  m_LocalPosition: {x: 7, y: 255, z: -445}
+  m_LocalRotation: {x: 0.26387298, y: 0, z: 0, w: 0.96455747}
+  m_LocalPosition: {x: 7, y: 353, z: -507}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1549415953}
   - {fileID: 1370198052}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 30.628002, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30.6, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -869,7 +869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 6651289193898400361, guid: a1ee64c770f0cae4cbdd62719bd87b96, type: 3}
-  figure: {fileID: 9045230540757359648, guid: 4c07d214a94572349a8c41806538835a, type: 3}
+  figure: {fileID: 6713690970896724886, guid: 6e7fe4f193c018743971c035c300c95b, type: 3}
   playerDetails: {fileID: 1370198046}
   RewindText: {fileID: 1549415948}
 --- !u!4 &1956971124

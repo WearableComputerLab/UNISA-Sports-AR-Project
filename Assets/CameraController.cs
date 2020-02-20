@@ -4,15 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
-{
-    private bool followingTarget = false;
+{    
     public GameObject target;
+
+    private bool followingTarget = false;
     private static Vector3 offset = new Vector3(0, -5, 10);
-
-    // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
-
-
-
+       
     // Update is called once per frame
     void Update()
     {
@@ -21,10 +18,10 @@ public class CameraController : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.Escape)))
         {
             followingTarget = false;
-            target.GetComponent<IconBehaviour>().isWatched = false;
+            target.GetComponent<IconBehaviour>().setIsWatched(false);
             target.GetComponent<Renderer>().material = origMat;
             Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
-            Camera.main.transform.rotation = Quaternion.Euler(30.628f, 0, 0);
+            Camera.main.transform.rotation = Quaternion.Euler(Dimensions.cameraRotX, Dimensions.cameraRotY, Dimensions.cameraRotZ);
             Camera.main.transform.parent = null;
         }
 

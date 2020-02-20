@@ -8,8 +8,8 @@ public class TextBehaviour : MonoBehaviour
     public GameObject plane;
     private GameObject player;
     private float boundOffset;
-    private float lowXBound = Dimensions.textBoxLowBoundX;
-    private float highXBound = Dimensions.textBoxHighBoundX;
+    private float lowXBound = Dimensions.fieldLowBoundX;
+    private float highXBound = Dimensions.fieldHighBoundX;
 
     public float activationTime;
     

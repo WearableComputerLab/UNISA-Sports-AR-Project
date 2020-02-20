@@ -5,27 +5,27 @@ using System;
 using System.Globalization;
 
 public class IconBehaviour : MonoBehaviour
-{
-    public string filePath;
+{    
+    public GameObject figure;
+
+    private string filePath;
     private string[][] data;
     private string[] lines;
+
     private float XPos;
     private float YPos;
-    private DateTime prevTime;
-    private DateTime currentTime;
-    private double timeTaken = 0;
-
     // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
     private float objPrevX;
     private float objPrevY;
-
     private float distTravelledX = 0;
     private float distTravelledY = 0;
 
-    public bool isWatched = false;
+    private DateTime prevTime;
+    private DateTime currentTime;
+    private double timeTaken = 0;
+          
+    private bool isWatched = false;
     private bool firstClick;
-
-    public GameObject figure;
 
     public void ReadFile()
     {
@@ -51,7 +51,7 @@ public class IconBehaviour : MonoBehaviour
             Vector3 newPos = Vector3.Lerp(gameObject.transform.position, getNewPos(timeIndex), speed);
 
             // Tell fig to move
-            GameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), speed);
+            GameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), speed, AdjustSpeed(gameObject.transform.position, newPos));
 
             distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
@@ -72,12 +72,15 @@ public class IconBehaviour : MonoBehaviour
                     distTravelledY = 0;
                     firstClick = false;
                 }
-
                 objPrevX = gameObject.transform.position.x;
                 objPrevY = gameObject.transform.position.y;
             }
             gameObject.transform.position = newPos;
         }
+    }
+    private float AdjustSpeed(Vector3 vec1, Vector3 vec2)
+    {
+        return new Vector2(vec1.x - vec2.x, vec1.z - vec2.z).magnitude;
     }
 
     public void Teleport(int timeIndex)
@@ -115,6 +118,16 @@ public class IconBehaviour : MonoBehaviour
         detailsBox.GetComponent<TextBehaviour>().setTitle(data[5][0].Substring(8));
     }
 
+    public void setIsWatched(bool isWatched)
+    {
+        this.isWatched = isWatched;
+    }
+
+    public void setFilePath(string filePath)
+    {
+        this.filePath = filePath;
+    }
+
     private Vector3 getNewPos(int timeIndex)
     {
         if (data[timeIndex][0].Length == 7)
@@ -133,22 +146,34 @@ public class IconBehaviour : MonoBehaviour
         if (data[timeIndex][5] != " ----")
         {
             XPos = getLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
+            gameObject.SetActive(true);
+            figure.SetActive(true);
         }
         else
         {
-            XPos = 0;
+            XPos = Dimensions.fieldLowBoundX;
+            gameObject.SetActive(false);
+            figure.SetActive(false);
         }
 
         if (data[timeIndex][6] != " ----")
         {
             YPos = getLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
+            gameObject.SetActive(true);
+            figure.SetActive(true);
         }
         else
         {
             YPos = 0;
+            gameObject.SetActive(false);
+            figure.SetActive(false);
         }
-
         return new Vector3(XPos, Dimensions.sphereElevation, YPos);
+    }
+
+    public string Name()
+    {
+        return lines[5].Substring(8);
     }
 
     private float getLong(double longCoord)
@@ -164,5 +189,4 @@ public class IconBehaviour : MonoBehaviour
         double scaledCoord = (latCoord + Dimensions.centrePointLat) * Dimensions.scaleFactor;
         return (float)scaledCoord;
     }
-
 }

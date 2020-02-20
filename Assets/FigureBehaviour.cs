@@ -12,9 +12,9 @@ public class FigureBehaviour : MonoBehaviour
         animator = gameObject.GetComponent<Animator>();
     }
 
-    public void Move(Vector3 pos, float speed)
+    public void Move(Vector3 pos, float speed, float adjustedSpeed)
     {
-        animator.SetFloat("Speed", speed);
+        animator.SetFloat("Speed", adjustedSpeed);
         Vector3 newPos = Vector3.Lerp(gameObject.transform.position, pos, speed);
         var playerRotation = Quaternion.LookRotation(newPos - transform.position);
 
@@ -22,6 +22,8 @@ public class FigureBehaviour : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
         gameObject.transform.position = newPos;
     }
+
+    
 
     public void Teleport(Vector3 pos)
     {

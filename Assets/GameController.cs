@@ -30,21 +30,21 @@ public class GameController : MonoBehaviour
         filePaths[4] = "StewartP 2515 201005011354";
         filePaths[5] = "Thomas 2531 201005011355";
 
-        IconBehaviour pb;
+        IconBehaviour ib;
 
         for (int i = 0; i < filePaths.Length; i++)
         {
-            icons[i] = Instantiate(icon);
-            pb = icons[i].GetComponent<IconBehaviour>();
-            pb.filePath = filePaths[i];
-            pb.ReadFile();
+            icons[i] = Instantiate(icon, new Vector3(Dimensions.runOnX, Dimensions.sphereElevation, Dimensions.runOnZ), Quaternion.identity);
+            ib = icons[i].GetComponent<IconBehaviour>();
+            ib.setFilePath(filePaths[i]);
+            ib.ReadFile();
 
-            figures[i] = Instantiate(figure);
-            pb.figure = figures[i]; // assign a figure to the relevant icon
-
-
+            figures[i] = Instantiate(figure, new Vector3(Dimensions.runOnX, 0, Dimensions.runOnZ), Quaternion.identity);
+            ib.figure = figures[i]; // assign a figure to the relevant icon
+            
+            figures[i].name = ib.Name() + " Figure";
+            icons[i].name = ib.Name() + " Icon";
         }
-
     }
 
     // Update is called once per frame
@@ -101,12 +101,11 @@ public class GameController : MonoBehaviour
         {
             icons[i].GetComponent<IconBehaviour>().Teleport(timeIndex);
         }
-
     }
 
-    public static void MoveFigure(GameObject figure, Vector3 pos, float speed)
+    public static void MoveFigure(GameObject figure, Vector3 pos, float speed, float GoodSpeed)
     {
-        figure.GetComponent<FigureBehaviour>().Move(pos, speed);
+        figure.GetComponent<FigureBehaviour>().Move(pos, speed, GoodSpeed);
     }
 
     public static void TeleportFigure(GameObject figure, Vector3 pos)

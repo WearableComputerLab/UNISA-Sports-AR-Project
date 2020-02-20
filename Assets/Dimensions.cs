@@ -14,14 +14,19 @@ public class Dimensions : MonoBehaviour
      */
     // Values for simulation
     public static int scaleFactor = 400000;
-    public static int textBoxLowBoundX = -69;
-    public static int textBoxHighBoundX = 83;
+    public static int fieldLowBoundX = -69; // Used to determine where textbox should stop, to avoid it going ot of view
+    public static int fieldHighBoundX = 83; // Used to determine where textbox should stop, to avoid it going ot of view
     public static float cameraDefaultX = 7;
-    public static float cameraDefaultY = 255;
-    public static float cameraDefaultZ = -445;
+    public static float cameraDefaultY = 353;
+    public static float cameraDefaultZ = -507;
+    public static float cameraRotX = 30.6f;
+    public static float cameraRotY = 0;
+    public static float cameraRotZ = 0;
+
     public static int rewindFactor = 100;
 
     public static float sphereElevation = 72;
 
-
+    public static float runOnX = -400;
+    public static float runOnZ = 0;
 }

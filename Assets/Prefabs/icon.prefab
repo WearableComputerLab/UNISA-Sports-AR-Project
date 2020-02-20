@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 285454096401425638}
   - component: {fileID: 2843010794724037447}
   m_Layer: 0
-  m_Name: Player
+  m_Name: icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,5 +135,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd40cf4726322504889ef13a7832529b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filePath: 
-  isWatched: 0
+  figure: {fileID: 0}
