@@ -8,14 +8,16 @@ public class GameController : MonoBehaviour
     public GameObject icon;
     public GameObject figure;
     public GameObject playerDetails;
+    public GameObject rewindText;
 
-    GameObject[] icons = new GameObject[6];
-    GameObject[] figures = new GameObject[6];
+    private static GameObject[] icons = new GameObject[6];
+    private static GameObject[] figures = new GameObject[6];
+
+    private static Vector2 distTravelledCurrentTurn = new Vector2(0, 0);
 
     private int timeIndex = 0;
     private bool isRewinding;
     private int rewindStartIndex = -1;
-    public GameObject RewindText;
 
     public static float timer = 0;
 
@@ -36,7 +38,7 @@ public class GameController : MonoBehaviour
         {
             icons[i] = Instantiate(icon, new Vector3(Dimensions.runOnX, Dimensions.sphereElevation, Dimensions.runOnZ), Quaternion.identity);
             ib = icons[i].GetComponent<IconBehaviour>();
-            ib.setFilePath(filePaths[i]);
+            ib.SetFilePath(filePaths[i]);
             ib.ReadFile();
 
             figures[i] = Instantiate(figure, new Vector3(Dimensions.runOnX, 0, Dimensions.runOnZ), Quaternion.identity);
@@ -60,11 +62,11 @@ public class GameController : MonoBehaviour
 
         if (isRewinding)
         {
-            RewindText.SetActive(true);
+            rewindText.SetActive(true);
         }
         else
         {
-            RewindText.SetActive(false);
+            rewindText.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -75,10 +77,12 @@ public class GameController : MonoBehaviour
         {
             for (int i = 0; i < icons.Length; i++)
             {
-                icons[i].GetComponent<IconBehaviour>().Move(timeIndex);
+                if (icons[i] != null)
+                {
+                    icons[i].GetComponent<IconBehaviour>().Move(i, timeIndex);
+                }
             }
         }
-
         timeIndex += 1;
         Thread.Sleep(40);
     }
@@ -113,20 +117,39 @@ public class GameController : MonoBehaviour
         {
             timeIndex = 9;
         }
-        print("Rewinding from " + oldIndex + " to " + timeIndex);
+//        print("Rewinding from " + oldIndex + " to " + timeIndex);
         for (int i = 0; i < icons.Length; i++)
         {
             icons[i].GetComponent<IconBehaviour>().Teleport(timeIndex);
         }
     }
 
-    public static void MoveFigure(GameObject figure, Vector3 pos, float speed, float adjustedSpeed)
+    public static void MoveFigure(GameObject figure, Vector3 pos, float speed)
     {
-        figure.GetComponent<FigureBehaviour>().Move(pos, speed, adjustedSpeed);
+        figure.GetComponent<FigureBehaviour>().Move(pos, speed);
     }
 
     public static void TeleportFigure(GameObject figure, Vector3 pos)
     {
         figure.GetComponent<FigureBehaviour>().Teleport(pos);
+    }
+
+    public static void EvaluateGreatestDist(int playerCode, Vector3 value)
+    {
+        print("How about now...");
+        if(playerCode == 0)
+        {
+            distTravelledCurrentTurn = new Vector2(0, 0);
+        }
+
+        if(value.magnitude > distTravelledCurrentTurn.magnitude)
+        {
+            distTravelledCurrentTurn = value;
+        }
+
+        if(distTravelledCurrentTurn.magnitude > 0)
+        {
+            icons[playerCode].GetComponent<IconBehaviour>().Observe();
+        }
     }
 }

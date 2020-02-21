@@ -633,7 +633,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   plane: {fileID: 2132096758}
-  activationTime: 0
 --- !u!1 &1549415948
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,7 +849,7 @@ GameObject:
   - component: {fileID: 1956971123}
   - component: {fileID: 1956971125}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -871,7 +870,7 @@ MonoBehaviour:
   icon: {fileID: 6651289193898400361, guid: a1ee64c770f0cae4cbdd62719bd87b96, type: 3}
   figure: {fileID: 6713690970896724886, guid: 6e7fe4f193c018743971c035c300c95b, type: 3}
   playerDetails: {fileID: 1370198046}
-  RewindText: {fileID: 1549415948}
+  rewindText: {fileID: 1549415948}
 --- !u!4 &1956971124
 Transform:
   m_ObjectHideFlags: 0

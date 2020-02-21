@@ -11,7 +11,7 @@ public class TextBehaviour : MonoBehaviour
     private float lowXBound = Dimensions.fieldLowBoundX;
     private float highXBound = Dimensions.fieldHighBoundX;
 
-    public float activationTime;
+    private float activationTime;
     
     // Update is called once per frame
     void Update()
@@ -39,20 +39,22 @@ public class TextBehaviour : MonoBehaviour
 
         if(GameController.timer > (activationTime + 50 * Time.deltaTime))
         {
-
             gameObject.SetActive(false);
-
         }
-
-    }
-
-    public void setTitle(string title){
-
-        gameObject.transform.Find("Title").GetComponent<TextMeshPro>().text = title;
     }
 
     public void SetPlayer(GameObject player)
     {
         this.player = player;
+    }
+
+    public void SetTitle(string title){
+
+        gameObject.transform.Find("Title").GetComponent<TextMeshPro>().text = title;
+    }
+
+    public void SetActivationTime(float activationTime)
+    {
+        this.activationTime = activationTime;
     }
 }

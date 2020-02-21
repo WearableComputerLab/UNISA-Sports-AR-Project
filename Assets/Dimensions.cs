@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Dimensions : MonoBehaviour
 {
-   
     // Values related to the csv data
     public static double centrePointLong = 138.495485;
     public static double centrePointLat = 34.879921;
@@ -25,7 +24,7 @@ public class Dimensions : MonoBehaviour
 
     public static int rewindFactor = 100;
 
-    public static float sphereElevation = 87;
+    public static float sphereElevation = 95;
 
     public static float runOnX = -400;
     public static float runOnZ = 0;

@@ -38,11 +38,10 @@ public class CameraController : MonoBehaviour
     {
         Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
         followingTarget = false;
-        target.GetComponent<IconBehaviour>().setIsWatched(false);
+        target.GetComponent<IconBehaviour>().SetIsWatched(false);
         target.GetComponent<Renderer>().material = origMat;
         Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
         Camera.main.transform.rotation = Quaternion.Euler(Dimensions.cameraRotX, Dimensions.cameraRotY, Dimensions.cameraRotZ);
         Camera.main.transform.parent = null;
     }
-
 }
