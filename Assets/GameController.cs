@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
     private bool isRewinding;
     private int rewindStartIndex = -1;
 
+    private static int fastestPlayerCode;
+
     public static float timer = 0;
 
     // Start is called before the first frame update
@@ -117,7 +119,7 @@ public class GameController : MonoBehaviour
         {
             timeIndex = 9;
         }
-//        print("Rewinding from " + oldIndex + " to " + timeIndex);
+        //        print("Rewinding from " + oldIndex + " to " + timeIndex);
         for (int i = 0; i < icons.Length; i++)
         {
             icons[i].GetComponent<IconBehaviour>().Teleport(timeIndex);
@@ -136,20 +138,21 @@ public class GameController : MonoBehaviour
 
     public static void EvaluateGreatestDist(int playerCode, Vector3 value)
     {
-        print("How about now...");
-        if(playerCode == 0)
+        if (playerCode == 0)
         {
             distTravelledCurrentTurn = new Vector2(0, 0);
+            fastestPlayerCode = 0;
         }
 
-        if(value.magnitude > distTravelledCurrentTurn.magnitude)
+        if (value.magnitude > distTravelledCurrentTurn.magnitude)
         {
             distTravelledCurrentTurn = value;
+            fastestPlayerCode = playerCode;
         }
 
-        if(distTravelledCurrentTurn.magnitude > 0)
+        if (playerCode == (figures.Length - 1))
         {
-            icons[playerCode].GetComponent<IconBehaviour>().Observe();
+            icons[fastestPlayerCode].GetComponent<IconBehaviour>().DisplayDetails();
         }
     }
 }

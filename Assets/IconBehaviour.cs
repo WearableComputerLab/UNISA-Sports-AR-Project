@@ -5,7 +5,7 @@ using System;
 using System.Globalization;
 
 public class IconBehaviour : MonoBehaviour
-{    
+{
     public GameObject figure;
 
     private string filePath;
@@ -17,13 +17,17 @@ public class IconBehaviour : MonoBehaviour
     // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
     private float objPrevX;
     private float objPrevY;
-    private float distTravelledX = 0; // Only move camera or rotate player if threshold reached, otherwise movements too small to account for
-    private float distTravelledY = 0; // Only move camera or rotate player if threshold reached, otherwise movements too small to account for
+
+    private float distTravelledX = 0; // Dist on a given turn
+    private float distTravelledY = 0; // Dist on a given turn
+
+    private float distTravelledXAcc = 0; // Dist accumulating to a threshold. Only move camera or rotate player if threshold reached, otherwise movements too small to account for
+    private float distTravelledYAcc = 0; // Dist accumulating to a threshold. Only move camera or rotate player if threshold reached, otherwise movements too small to account for
 
     private DateTime prevTime;
     private DateTime currentTime;
     private double timeTaken = 0;
-          
+
     private bool isWatched = false;
     private bool firstClick;
 
@@ -53,42 +57,57 @@ public class IconBehaviour : MonoBehaviour
             // Tell fig to move
             GameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), AdjustSpeed(gameObject.transform.position, newPos));
 
-            distTravelledX += Mathf.Abs(gameObject.transform.position.x - objPrevX);
-            distTravelledY += Mathf.Abs(gameObject.transform.position.y - objPrevY);
+            distTravelledX = Mathf.Abs(gameObject.transform.position.x - objPrevX);
+            distTravelledY = Mathf.Abs(gameObject.transform.position.y - objPrevY);
+
+            distTravelledXAcc += Mathf.Abs(gameObject.transform.position.x - objPrevX);
+            distTravelledYAcc += Mathf.Abs(gameObject.transform.position.y - objPrevY);
+
+            GameObject detailsBox = GameObject.Find("Controller").GetComponent<GameController>().playerDetails;
 
             if (isWatched)
             {
-                if (((distTravelledX > 0.1) || (distTravelledY > 0.1)) || (firstClick))
+                if (((distTravelledXAcc > 0.1) || (distTravelledYAcc > 0.1)) || (firstClick))
                 {
                     speed = 0.8f;
 
-                    var playerRotation = Quaternion.LookRotation(newPos - transform.position);
+                    Quaternion playerRotation = Quaternion.LookRotation(newPos - transform.position);
 
                     // Smoothly rotate towards the target point.
                     transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
 
-                    // distTravelled can be recorded for this sphere
-                    print("Correct dist");
-                    GameController.EvaluateGreatestDist(playerCode, new Vector3(distTravelledX, distTravelledY));
-
-                    distTravelledX = 0;
-                    distTravelledY = 0;
+                    distTravelledXAcc = 0;
+                    distTravelledYAcc = 0;
                     firstClick = false;
                 }
-                else
-                {
-                    // disttravelled zero for purposes of textbox determination calcs
-                    GameController.EvaluateGreatestDist(playerCode, new Vector2(0, 0));
-                }
+
                 objPrevX = gameObject.transform.position.x;
                 objPrevY = gameObject.transform.position.y;
             }
-            if (((!float.IsNaN(newPos.x)) && (!float.IsNaN(newPos.y))) && (!float.IsNaN(newPos.z)))
+            else
+            {
+                if ((distTravelledX > 5) || (distTravelledY > 5))
+                {
+                    GameController.EvaluateGreatestDist(playerCode, new Vector3(distTravelledX, distTravelledY));
+                    detailsBox.SetActive(true);
+                }
+                else
+                {
+                    GameController.EvaluateGreatestDist(playerCode, new Vector3(0, 0));
+                    detailsBox.SetActive(false);
+                }
+
+            }
+            distTravelledX = 0;
+            distTravelledY = 0;
+
+            if (((!float.IsNaN(newPos.x)) && (!float.IsNaN(newPos.y))) && (!float.IsNaN(newPos.z))) // Ensure values are valid
             {
                 gameObject.transform.position = newPos;
             }
         }
     }
+
     private float AdjustSpeed(Vector3 vec1, Vector3 vec2)
     {
         return new Vector2(vec1.x - vec2.x, vec1.z - vec2.z).magnitude;
@@ -97,7 +116,7 @@ public class IconBehaviour : MonoBehaviour
     public void Teleport(int timeIndex)
     {
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
-        {           
+        {
             gameObject.transform.position = GetNewPos(timeIndex);
             GameController.TeleportFigure(figure, new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z));
         }
