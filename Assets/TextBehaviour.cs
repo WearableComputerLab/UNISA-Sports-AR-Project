@@ -37,7 +37,7 @@ public class TextBehaviour : MonoBehaviour
             }
         }
 
-        if(GameController.timer > (activationTime + 50 * Time.deltaTime))
+        if(GameController.Timer() > (activationTime + 50 * Time.deltaTime))
         {
             gameObject.SetActive(false);
         }

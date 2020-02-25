@@ -15,11 +15,11 @@ public class FigureBehaviour : MonoBehaviour
     {
         animator.SetFloat("Speed", speed);
         Vector3 newPos = Vector3.Lerp(gameObject.transform.position, pos, speed);
-        
+
         if (((!float.IsNaN(newPos.x)) && (!float.IsNaN(newPos.y))) && (!float.IsNaN(newPos.z)))
         {
-        Quaternion playerRotation = Quaternion.LookRotation(newPos - transform.position);
-        // Smoothly rotate towards the target point.        
+            Quaternion playerRotation = Quaternion.LookRotation(newPos - transform.position);
+            // Smoothly rotate towards the target point.        
             transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
             gameObject.transform.position = newPos;
         }

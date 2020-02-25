@@ -142,10 +142,11 @@ public class IconBehaviour : MonoBehaviour
     public void DisplayDetails()
     {
         GameObject detailsBox = GameObject.Find("Controller").GetComponent<GameController>().playerDetails;
-        detailsBox.GetComponent<TextBehaviour>().SetActivationTime(GameController.timer);
+        TextBehaviour tb = detailsBox.GetComponent<TextBehaviour>();
+        tb.SetActivationTime(GameController.Timer());
         detailsBox.SetActive(true);
-        detailsBox.GetComponent<TextBehaviour>().SetPlayer(gameObject);
-        detailsBox.GetComponent<TextBehaviour>().SetTitle(data[5][0].Substring(8));
+        tb.SetPlayer(gameObject);
+        tb.SetTitle(data[5][0].Substring(8));
     }
 
     public void SetIsWatched(bool isWatched)

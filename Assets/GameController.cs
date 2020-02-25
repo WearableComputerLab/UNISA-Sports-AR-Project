@@ -21,7 +21,9 @@ public class GameController : MonoBehaviour
 
     private static int fastestPlayerCode;
 
-    public static float timer = 0;
+    private static float timer = 0;
+
+    private static bool followModeOn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -86,7 +88,7 @@ public class GameController : MonoBehaviour
             }
         }
         timeIndex += 1;
-        Thread.Sleep(40);
+  //      Thread.Sleep(40);
     }
 
     private void OnGUI()
@@ -100,9 +102,12 @@ public class GameController : MonoBehaviour
             Rewind();
         }
 
-        if (GUI.Button(new Rect(280, 1200, 240, 150), "Main View", guiStyle))
+        if (followModeOn)
         {
-            Camera.main.GetComponent<CameraController>().LeaveFollowMode();
+            if (GUI.Button(new Rect(280, 1200, 240, 150), "Main View", guiStyle))
+            {
+                Camera.main.GetComponent<CameraController>().LeaveFollowMode();
+            }
         }
     }
 
@@ -154,5 +159,19 @@ public class GameController : MonoBehaviour
         {
             icons[fastestPlayerCode].GetComponent<IconBehaviour>().DisplayDetails();
         }
+    }
+    public static float Timer()
+    {
+        return timer;
+    }
+
+    public static bool FollowMode()
+    {
+        return followModeOn;
+    }
+
+    public static void SetFollowMode(bool value)
+    {
+        followModeOn = value;
     }
 }
