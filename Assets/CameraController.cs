@@ -29,16 +29,39 @@ public class CameraController : MonoBehaviour
 
     public void EnterFollowMode(GameObject target)
     {
-        Camera.main.transform.SetParent(target.transform);
-        if (!GameController.FollowMode())
+        if (!GameController.FollowModeOn())
         {
             Camera.main.transform.localPosition += posOffset;
             Camera.main.transform.Rotate(rotOffset);
         }
+        else
+        {
+            LeaveFollowMode(); // Reset to prevent issues related to angle and position, which seem to occur when jumping from one orb to another
+        }
+        Camera.main.transform.SetParent(target.transform);
+
         this.target = target;
         followingTarget = true;
-        GameController.SetFollowMode(true);
+        GameController.SetFollowModeOn(true);
     }
+
+    public void EnterFirstPersonMode(GameObject target)
+    {
+        if (!GameController.FollowModeOn())
+        {
+            Camera.main.transform.position = target.transform.position;
+        }
+        else
+        {
+            LeaveFollowMode(); 
+        }
+        Camera.main.transform.SetParent(target.transform);
+        this.target = target;
+        followingTarget = true;
+        GameController.SetFollowModeOn(true);
+
+    }
+
 
     public void LeaveFollowMode()
     {
@@ -49,6 +72,6 @@ public class CameraController : MonoBehaviour
         Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
         Camera.main.transform.rotation = Quaternion.Euler(Dimensions.cameraRotX, Dimensions.cameraRotY, Dimensions.cameraRotZ);
         Camera.main.transform.parent = null;
-        GameController.SetFollowMode(false);
+        GameController.SetFollowModeOn(false);
     }
 }

@@ -124,6 +124,27 @@ public class IconBehaviour : MonoBehaviour
 
     public void Observe()
     {
+        RestoreDefaultMaterial();
+        Camera.main.GetComponent<CameraController>().EnterFollowMode(gameObject);
+        objPrevX = gameObject.transform.position.x;
+        objPrevY = gameObject.transform.position.y;
+        isWatched = true;
+        firstClick = true;
+    }
+
+    public void ObserveFirstPerson()
+    {
+        RestoreDefaultMaterial();
+        Camera.main.GetComponent<CameraController>().EnterFirstPersonMode(gameObject);
+               
+        objPrevX = gameObject.transform.position.x;
+        objPrevY = gameObject.transform.position.y;
+        isWatched = true;
+        firstClick = true;
+    }
+
+    public void RestoreDefaultMaterial()
+    {
         GameObject trackedObj = Camera.main.GetComponent<CameraController>().target;
         Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
 
@@ -131,12 +152,6 @@ public class IconBehaviour : MonoBehaviour
         {
             trackedObj.GetComponent<Renderer>().material = origMat;
         }
-
-        Camera.main.GetComponent<CameraController>().EnterFollowMode(gameObject);
-        objPrevX = gameObject.transform.position.x;
-        objPrevY = gameObject.transform.position.y;
-        isWatched = true;
-        firstClick = true;
     }
 
     public void DisplayDetails()

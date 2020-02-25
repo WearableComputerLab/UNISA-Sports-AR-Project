@@ -24,6 +24,8 @@ public class GameController : MonoBehaviour
     private static float timer = 0;
 
     private static bool followModeOn = false;
+    public enum TrackingMode {Observing, FirstPerson};
+    public static TrackingMode trackingMode = TrackingMode.FirstPerson;
 
     // Start is called before the first frame update
     void Start()
@@ -165,12 +167,12 @@ public class GameController : MonoBehaviour
         return timer;
     }
 
-    public static bool FollowMode()
+    public static bool FollowModeOn()
     {
         return followModeOn;
     }
 
-    public static void SetFollowMode(bool value)
+    public static void SetFollowModeOn(bool value)
     {
         followModeOn = value;
     }
