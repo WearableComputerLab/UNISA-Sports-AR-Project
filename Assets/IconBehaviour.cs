@@ -90,19 +90,7 @@ public class IconBehaviour : MonoBehaviour
             }
             else
             {
-                if ((distTravelledX > 5) || (distTravelledY > 5))
-                {
-                    GameController.EvaluateGreatestDist(playerCode, new Vector3(distTravelledX, distTravelledY));
-                    GameController.SetPlayerUIActivation(true);
-                    dbBehaviour.SetVisibility(true); // Defunct
-                }
-                else
-                {
-                    // May be an issue here, sth may need to be done somewhere else...
-                    GameController.EvaluateGreatestDist(playerCode, new Vector3(0, 0));
-                    GameController.SetPlayerUIActivation(false);
-                    dbBehaviour.SetVisibility(false); // Defunct
-                }
+                GameController.EvaluateGreatestDist(playerCode, new Vector3(distTravelledX, distTravelledY));
             }
 
             distTravelledX = 0;

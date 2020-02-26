@@ -28,4 +28,9 @@ public class Dimensions : MonoBehaviour
 
     public static float runOnX = -400;
     public static float runOnZ = 0;
+
+    public static float UIRunThresholdX = 60;  // Determines how fast a player must move in order for the details UI to activate
+    public static float UIRunThresholdZ = 60;
+
+
 }

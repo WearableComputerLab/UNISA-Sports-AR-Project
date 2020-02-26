@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
     private static GameObject[] icons = new GameObject[6];
     private static GameObject[] figures = new GameObject[6];
 
-    private static Vector2 distTravelledCurrentTurn = new Vector2(0, 0);
+    private static Vector3 distTravelledCurrentTurn = new Vector3(0, 0, 0);
 
     private int timeIndex = 0;
     private bool isRewinding;
@@ -101,11 +101,16 @@ public class GameController : MonoBehaviour
         GUIStyle guiStyle = new GUIStyle(GUI.skin.button);
 
         guiStyle.fontSize = 50;
-
+                
         if (playerUIActivated)
         {
+            Debug.Log("Player UI activated");
             IconBehaviour fpb = fastestPlayer.GetComponent<IconBehaviour>();
-            GUI.Box(new Rect(0, 0, 500, 300), fpb.Name());
+            GUI.Box(new Rect(0, 0, 500, 100), fpb.Name(), guiStyle);
+        }
+        else
+        {
+            Debug.Log("NO UI ACTIVAT");
         }
 
         if (GUI.Button(new Rect(45, 1200, 170, 150), "Replay", guiStyle))
@@ -190,6 +195,15 @@ public class GameController : MonoBehaviour
         {
             fastestPlayer = icons[fastestPlayerCode];
             icons[fastestPlayerCode].GetComponent<IconBehaviour>().DisplayDetails(); // Defunct
+            
+            if((distTravelledCurrentTurn.x > Dimensions.UIRunThresholdX) || (distTravelledCurrentTurn.z > Dimensions.UIRunThresholdZ))
+            {
+                SetPlayerUIActivation(true);
+            }
+            else
+            {
+                SetPlayerUIActivation(false);
+            }
         }
     }
     public static float Timer()
@@ -211,4 +225,5 @@ public class GameController : MonoBehaviour
     {
         playerUIActivated = isActive;
     }
+
 }
