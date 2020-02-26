@@ -34,8 +34,8 @@ public class ObjectRaycaster : MonoBehaviour
 
                 if (objBehaviour != null)
                 {
-                   // objBehaviour.Observe();
-                    objBehaviour.ObserveFirstPerson();
+                    objBehaviour.Observe();
+                    //objBehaviour.ObserveFirstPerson();
                 }
             }
         }

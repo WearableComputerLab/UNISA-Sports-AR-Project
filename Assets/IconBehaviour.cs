@@ -24,6 +24,8 @@ public class IconBehaviour : MonoBehaviour
     private float distTravelledXAcc = 0; // Dist accumulating to a threshold. Only move camera or rotate player if threshold reached, otherwise movements too small to account for
     private float distTravelledYAcc = 0; // Dist accumulating to a threshold. Only move camera or rotate player if threshold reached, otherwise movements too small to account for
 
+    private Vector3 direction;
+
     private DateTime prevTime;
     private DateTime currentTime;
     private double timeTaken = 0;
@@ -53,6 +55,7 @@ public class IconBehaviour : MonoBehaviour
         {
             float speed = (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken);
             Vector3 newPos = Vector3.Lerp(gameObject.transform.position, GetNewPos(timeIndex), speed);
+            direction = newPos.normalized;
 
             // Tell fig to move
             GameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), AdjustSpeed(gameObject.transform.position, newPos));
@@ -136,7 +139,6 @@ public class IconBehaviour : MonoBehaviour
     {
         RestoreDefaultMaterial();
         Camera.main.GetComponent<CameraController>().EnterFirstPersonMode(gameObject);
-               
         objPrevX = gameObject.transform.position.x;
         objPrevY = gameObject.transform.position.y;
         isWatched = true;
@@ -221,6 +223,12 @@ public class IconBehaviour : MonoBehaviour
     {
         return lines[5].Substring(8);
     }
+
+    public Vector3 Direction()
+    {
+        return direction;
+    }
+
 
     private float GetLong(double longCoord)
     {
