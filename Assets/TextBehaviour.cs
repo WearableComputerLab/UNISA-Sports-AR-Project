@@ -39,8 +39,14 @@ public class TextBehaviour : MonoBehaviour
 
         if(GameController.Timer() > (activationTime + 50 * Time.deltaTime))
         {
-            gameObject.SetActive(false);
+            SetVisibility(false);
         }
+    }
+    public void SetVisibility(bool isActive)
+    {
+        // gameObject.SetActive(isActive);
+        // Toggle off for a while
+        gameObject.SetActive(false);
     }
 
     public void SetPlayer(GameObject player)

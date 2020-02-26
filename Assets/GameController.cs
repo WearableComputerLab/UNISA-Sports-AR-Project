@@ -24,8 +24,11 @@ public class GameController : MonoBehaviour
     private static float timer = 0;
 
     private static bool followModeOn = false;
-    public enum TrackingMode {Observing, FirstPerson};
+    public enum TrackingMode { Observing, FirstPerson };
     public static TrackingMode trackingMode = TrackingMode.FirstPerson;
+
+    private static bool playerUIActivated = false;
+    private static GameObject fastestPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -90,7 +93,7 @@ public class GameController : MonoBehaviour
             }
         }
         timeIndex += 1;
-  //      Thread.Sleep(40);
+        //      Thread.Sleep(40);
     }
 
     private void OnGUI()
@@ -99,6 +102,12 @@ public class GameController : MonoBehaviour
 
         guiStyle.fontSize = 50;
 
+        if (playerUIActivated)
+        {
+            IconBehaviour fpb = fastestPlayer.GetComponent<IconBehaviour>();
+            GUI.Box(new Rect(0, 0, 500, 300), fpb.Name());
+        }
+
         if (GUI.Button(new Rect(45, 1200, 170, 150), "Replay", guiStyle))
         {
             Rewind();
@@ -106,9 +115,29 @@ public class GameController : MonoBehaviour
 
         if (followModeOn)
         {
+            CameraController camctrl = Camera.main.GetComponent<CameraController>();
+            GameObject target = camctrl.Target();
+
             if (GUI.Button(new Rect(280, 1200, 240, 150), "Main View", guiStyle))
             {
                 Camera.main.GetComponent<CameraController>().LeaveFollowMode();
+            }
+
+            if (trackingMode == TrackingMode.FirstPerson)
+            {
+                if (GUI.Button(new Rect(500, 1200, 240, 150), "Zoom Out", guiStyle))
+                {
+                    trackingMode = TrackingMode.Observing;
+                    camctrl.EnterFollowMode(target);
+                }
+            }
+            else if (trackingMode == TrackingMode.Observing)
+            {
+                if (GUI.Button(new Rect(500, 1200, 240, 150), "Zoom In", guiStyle))
+                {
+                    trackingMode = TrackingMode.FirstPerson;
+                    camctrl.EnterFirstPersonMode(target);
+                }
             }
         }
     }
@@ -159,7 +188,8 @@ public class GameController : MonoBehaviour
 
         if (playerCode == (figures.Length - 1))
         {
-            icons[fastestPlayerCode].GetComponent<IconBehaviour>().DisplayDetails();
+            fastestPlayer = icons[fastestPlayerCode];
+            icons[fastestPlayerCode].GetComponent<IconBehaviour>().DisplayDetails(); // Defunct
         }
     }
     public static float Timer()
@@ -175,5 +205,10 @@ public class GameController : MonoBehaviour
     public static void SetFollowModeOn(bool value)
     {
         followModeOn = value;
+    }
+
+    public static void SetPlayerUIActivation(bool isActive)
+    {
+        playerUIActivated = isActive;
     }
 }

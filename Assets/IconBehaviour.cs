@@ -67,6 +67,7 @@ public class IconBehaviour : MonoBehaviour
             distTravelledYAcc += Mathf.Abs(gameObject.transform.position.y - objPrevY);
 
             GameObject detailsBox = GameObject.Find("Controller").GetComponent<GameController>().playerDetails;
+            TextBehaviour dbBehaviour = detailsBox.GetComponent<TextBehaviour>();
 
             if (isWatched)
             {
@@ -92,15 +93,18 @@ public class IconBehaviour : MonoBehaviour
                 if ((distTravelledX > 5) || (distTravelledY > 5))
                 {
                     GameController.EvaluateGreatestDist(playerCode, new Vector3(distTravelledX, distTravelledY));
-                    detailsBox.SetActive(true);
+                    GameController.SetPlayerUIActivation(true);
+                    dbBehaviour.SetVisibility(true); // Defunct
                 }
                 else
                 {
+                    // May be an issue here, sth may need to be done somewhere else...
                     GameController.EvaluateGreatestDist(playerCode, new Vector3(0, 0));
-                    detailsBox.SetActive(false);
+                    GameController.SetPlayerUIActivation(false);
+                    dbBehaviour.SetVisibility(false); // Defunct
                 }
-
             }
+
             distTravelledX = 0;
             distTravelledY = 0;
 
@@ -147,7 +151,7 @@ public class IconBehaviour : MonoBehaviour
 
     public void RestoreDefaultMaterial()
     {
-        GameObject trackedObj = Camera.main.GetComponent<CameraController>().target;
+        GameObject trackedObj = Camera.main.GetComponent<CameraController>().Target();
         Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
 
         if (trackedObj != null)
@@ -161,7 +165,7 @@ public class IconBehaviour : MonoBehaviour
         GameObject detailsBox = GameObject.Find("Controller").GetComponent<GameController>().playerDetails;
         TextBehaviour tb = detailsBox.GetComponent<TextBehaviour>();
         tb.SetActivationTime(GameController.Timer());
-        detailsBox.SetActive(true);
+        tb.SetVisibility(true);
         tb.SetPlayer(gameObject);
         tb.SetTitle(data[5][0].Substring(8));
     }

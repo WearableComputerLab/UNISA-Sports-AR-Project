@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject target;
+    private GameObject target;
 
     private bool followingTarget = false;
 
     private static Vector3 posOffset = new Vector3(-130f, 100f, -130f);
-    private readonly static Vector3 rotOffset = new Vector3(20f, 0f, 0f);
+    private static Vector3 rotOffset = new Vector3(20f, 0f, 0f);
+    private static Vector3 lookAtOffset = new Vector3(0f, 55f, 0f);
 
     private static Vector3 rotOffsetFirstPerson = new Vector3((float)-19.5, 0, 0);
-
 
     // Update is called once per frame
     void Update()
@@ -27,8 +27,12 @@ public class CameraController : MonoBehaviour
         {
             Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
             target.GetComponent<Renderer>().material = newMat;
-            transform.LookAt(target.transform.position + new Vector3(0f,55f,0f));
-            Camera.main.transform.Rotate(rotOffset);
+
+            if (GameController.trackingMode == GameController.TrackingMode.Observing)
+            {
+                transform.LookAt(target.transform.position + lookAtOffset);
+                Camera.main.transform.Rotate(rotOffset);
+            }
         }
     }
 
@@ -37,11 +41,7 @@ public class CameraController : MonoBehaviour
         if (GameController.FollowModeOn())
         {
             LeaveFollowMode();
-
         }
-
-        float dirX = target.GetComponent<IconBehaviour>().Direction().x;
-        float dirZ = target.GetComponent<IconBehaviour>().Direction().z;
 
         Camera.main.transform.position = target.transform.position + posOffset;
         Camera.main.transform.SetParent(target.transform);
@@ -59,9 +59,9 @@ public class CameraController : MonoBehaviour
         }
 
         Camera.main.transform.position = target.transform.position;
-        Camera.main.transform.Rotate(rotOffsetFirstPerson); 
-
+        Camera.main.transform.Rotate(rotOffsetFirstPerson);
         Camera.main.transform.SetParent(target.transform);
+
         this.target = target;
         followingTarget = true;
         GameController.SetFollowModeOn(true);
@@ -78,5 +78,11 @@ public class CameraController : MonoBehaviour
         Camera.main.transform.rotation = Quaternion.Euler(Dimensions.cameraRotX, Dimensions.cameraRotY, Dimensions.cameraRotZ);
         Camera.main.transform.parent = null;
         GameController.SetFollowModeOn(false);
+    }
+
+    public GameObject Target()
+    {
+        return target;
+
     }
 }

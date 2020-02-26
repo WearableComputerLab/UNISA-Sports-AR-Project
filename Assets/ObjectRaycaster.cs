@@ -31,13 +31,21 @@ public class ObjectRaycaster : MonoBehaviour
             {
                 hitObject = hit.transform.gameObject;
                 IconBehaviour objBehaviour = hitObject.GetComponent<IconBehaviour>();
-
-                if (objBehaviour != null)
-                {
-                    objBehaviour.Observe();
-                    //objBehaviour.ObserveFirstPerson();
-                }
+                SelectActivationMode(objBehaviour);
             }
         }
     }
+
+    private void SelectActivationMode(IconBehaviour objBehaviour)
+    {
+        if (GameController.trackingMode == GameController.TrackingMode.Observing)
+        {
+            objBehaviour.Observe();
+        }
+        else if (GameController.trackingMode == GameController.TrackingMode.FirstPerson)
+        {
+            objBehaviour.ObserveFirstPerson();
+        }
+    }
+
 }
