@@ -15,6 +15,13 @@ public class CameraController : MonoBehaviour
 
     private static Vector3 rotOffsetFirstPerson = new Vector3((float)-19.5, 0, 0);
 
+    private GameController gameController;
+
+    private void Start()
+    {
+        gameController = GameObject.Find("Controller").GetComponent<GameController>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -27,7 +34,7 @@ public class CameraController : MonoBehaviour
         {
             target.GetComponent<IconBehaviour>().ToggleMaterial(true);
 
-            if (GameController.trackingMode == GameController.TrackingMode.Observing)
+            if (gameController.CurrentInteractionMode() == GameController.InteractionMode.Observing)
             {
                 transform.LookAt(target.transform.position + lookAtOffset);
                 Camera.main.transform.Rotate(rotOffset);
@@ -37,7 +44,7 @@ public class CameraController : MonoBehaviour
 
     public void EnterFollowMode(GameObject target)
     {
-        if (GameController.FollowModeOn())
+        if (gameController.FollowModeOn())
         {
             LeaveFollowMode();
         }
@@ -47,12 +54,12 @@ public class CameraController : MonoBehaviour
 
         this.target = target;
         followingTarget = true;
-        GameController.SetFollowModeOn(true);
+        gameController.SetFollowModeOn(true);
     }
 
     public void EnterFirstPersonMode(GameObject target)
     {
-        if (GameController.FollowModeOn())
+        if (gameController.FollowModeOn())
         {
             LeaveFollowMode();
         }
@@ -63,7 +70,7 @@ public class CameraController : MonoBehaviour
 
         this.target = target;
         followingTarget = true;
-        GameController.SetFollowModeOn(true);
+        gameController.SetFollowModeOn(true);
 
     }
 
@@ -76,7 +83,7 @@ public class CameraController : MonoBehaviour
         Camera.main.transform.position = new Vector3(Dimensions.cameraDefaultX, Dimensions.cameraDefaultY, Dimensions.cameraDefaultZ);
         Camera.main.transform.rotation = Quaternion.Euler(Dimensions.cameraRotX, Dimensions.cameraRotY, Dimensions.cameraRotZ);
         Camera.main.transform.parent = null;
-        GameController.SetFollowModeOn(false);
+        gameController.SetFollowModeOn(false);
     }
 
     public GameObject Target()

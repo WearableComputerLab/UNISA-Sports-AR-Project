@@ -7,6 +7,11 @@ public class ObjectRaycaster : MonoBehaviour
     public LayerMask mask;
     GameObject hitObject;
 
+    private GameController gameController;
+    private void Start()
+    {
+        gameController = GameObject.Find("Controller").GetComponent<GameController>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -14,27 +19,27 @@ public class ObjectRaycaster : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
-          if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (Physics.Raycast(ray, out hit))
             {
                 hitObject = hit.transform.gameObject;
                 IconBehaviour objBehaviour = hitObject.GetComponent<IconBehaviour>();
-                SelectActivationMode(objBehaviour);
+                ObserveObject(objBehaviour);
             }
         }
     }
 
-    private void SelectActivationMode(IconBehaviour objBehaviour)
+    private void ObserveObject(IconBehaviour objBehaviour)
     {
-        if (GameController.trackingMode == GameController.TrackingMode.Observing)
+        if (gameController.CurrentInteractionMode() == GameController.InteractionMode.Observing)
         {
             if (objBehaviour != null)
             {
-                objBehaviour.Observe();
+                objBehaviour.ObserveWide();
             }
         }
-        else if (GameController.trackingMode == GameController.TrackingMode.FirstPerson)
+        else if (gameController.CurrentInteractionMode() == GameController.InteractionMode.FirstPerson)
         {
             if (objBehaviour != null)
             {

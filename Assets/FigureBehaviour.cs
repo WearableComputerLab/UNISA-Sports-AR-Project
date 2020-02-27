@@ -18,9 +18,9 @@ public class FigureBehaviour : MonoBehaviour
 
         if (((!float.IsNaN(newPos.x)) && (!float.IsNaN(newPos.y))) && (!float.IsNaN(newPos.z)))
         {
+            gameObject.transform.LookAt(newPos);
             Quaternion playerRotation = Quaternion.LookRotation(newPos - transform.position);
-            // Smoothly rotate towards the target point.        
-            transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);// Smoothly rotate towards the target point.  
             gameObject.transform.position = newPos;
         }
     }

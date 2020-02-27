@@ -14,7 +14,7 @@ public class IconBehaviour : MonoBehaviour
     private int teamNo = 1;
 
     private float XPos;
-    private float YPos;
+    private float ZPos;
     // Measures how much distance relevant obj has travelled since camera has moved, should be 1 before camera moves again
     private float objPrevX;
     private float objPrevY;
@@ -25,14 +25,21 @@ public class IconBehaviour : MonoBehaviour
     private float distTravelledXAcc = 0; // Dist accumulating to a threshold. Only move camera or rotate player if threshold reached, otherwise movements too small to account for
     private float distTravelledYAcc = 0; // Dist accumulating to a threshold. Only move camera or rotate player if threshold reached, otherwise movements too small to account for
 
-    private Vector3 direction;
-
     private DateTime prevTime;
     private DateTime currentTime;
-    private double timeTaken = 0;
+    private double timeElapsed;
+
+    private float speed;
 
     private bool isWatched = false;
-    private bool firstClick;
+    private bool isFirstClick;
+
+    private GameController gameController;
+
+    private void Start()
+    {
+        gameController = GameObject.Find("Controller").GetComponent<GameController>();
+    }
 
     public void ReadFile()
     {
@@ -54,33 +61,28 @@ public class IconBehaviour : MonoBehaviour
 
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
-            float speed = (float)(Math.Sqrt(Math.Pow(XPos, 2) + Math.Pow(YPos, 2)) / timeTaken);
-            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, GetNewPos(timeIndex), speed);
-            direction = newPos.normalized;
+            Vector3 newPos = Vector3.Lerp(gameObject.transform.position, GetNewPos(timeIndex), 1f * Time.deltaTime);
+
+            SetSpeed(CalculateSpeed(newPos, gameObject.transform.position));
 
             // Tell fig to move
-            GameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), AdjustSpeed(gameObject.transform.position, newPos));
+            gameController.MoveFigure(figure, new Vector3(newPos.x, 0, newPos.z), Speed());
 
-            distTravelledX = Mathf.Abs(gameObject.transform.position.x - objPrevX);
-            distTravelledY = Mathf.Abs(gameObject.transform.position.y - objPrevY);
-
-            distTravelledXAcc += Mathf.Abs(gameObject.transform.position.x - objPrevX);
-            distTravelledYAcc += Mathf.Abs(gameObject.transform.position.y - objPrevY);
+            RecordDistanceTravelled();
 
             if (isWatched)
             {
-                if (((distTravelledXAcc > 0.1) || (distTravelledYAcc > 0.1)) || (firstClick))
+                if (((distTravelledXAcc > 0.1) || (distTravelledYAcc > 0.1)) || (isFirstClick))
                 {
-                    speed = 0.8f;
 
                     Quaternion playerRotation = Quaternion.LookRotation(newPos - transform.position);
 
                     // Smoothly rotate towards the target point.
-                    transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, speed * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, Speed() * Time.deltaTime);
 
                     distTravelledXAcc = 0;
                     distTravelledYAcc = 0;
-                    firstClick = false;
+                    SetIsFirstClick(false);
                 }
 
                 objPrevX = gameObject.transform.position.x;
@@ -88,11 +90,10 @@ public class IconBehaviour : MonoBehaviour
             }
             else
             {
-                GameController.EvaluateGreatestDist(playerCode, new Vector3(distTravelledX, distTravelledY));
+                gameController.PlayerUIAutomation(playerCode, new Vector3(distTravelledX, distTravelledY));
+                distTravelledX = 0;
+                distTravelledY = 0;
             }
-
-            distTravelledX = 0;
-            distTravelledY = 0;
 
             if (((!float.IsNaN(newPos.x)) && (!float.IsNaN(newPos.y))) && (!float.IsNaN(newPos.z))) // Ensure values are valid
             {
@@ -101,9 +102,13 @@ public class IconBehaviour : MonoBehaviour
         }
     }
 
-    private float AdjustSpeed(Vector3 vec1, Vector3 vec2)
+    private void RecordDistanceTravelled()
     {
-        return new Vector2(vec1.x - vec2.x, vec1.z - vec2.z).magnitude;
+        distTravelledX = Mathf.Abs(gameObject.transform.position.x - objPrevX);
+        distTravelledY = Mathf.Abs(gameObject.transform.position.y - objPrevY);
+
+        distTravelledXAcc += Mathf.Abs(gameObject.transform.position.x - objPrevX);
+        distTravelledYAcc += Mathf.Abs(gameObject.transform.position.y - objPrevY);
     }
 
     public void Teleport(int timeIndex)
@@ -111,31 +116,57 @@ public class IconBehaviour : MonoBehaviour
         if ((timeIndex >= 9) && (!String.IsNullOrEmpty(lines[timeIndex])))
         {
             gameObject.transform.position = GetNewPos(timeIndex);
-            GameController.TeleportFigure(figure, new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z));
+            gameController.TeleportFigure(figure, new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z));
         }
     }
+        
+    public string Name()
+    {
+        return lines[5].Substring(8);
+    }
 
-    public void Observe()
+    public string Details()
+    {
+        return "";
+    }
+
+    private float Speed()
+    {
+        return speed;
+    }
+    private void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    private float CalculateSpeed(Vector3 newPos, Vector3 oldPos)
+    {
+        return new Vector2(newPos.x - oldPos.x, newPos.z - oldPos.z).magnitude / (float)timeElapsed;
+    }
+
+    public void ObserveWide()
     {
         RestoreDefaultMaterial();
         Camera.main.GetComponent<CameraController>().EnterFollowMode(gameObject);
-        objPrevX = gameObject.transform.position.x;
-        objPrevY = gameObject.transform.position.y;
-        isWatched = true;
-        firstClick = true;
+        InitializeObserveMode();
     }
 
     public void ObserveFirstPerson()
     {
         RestoreDefaultMaterial();
         Camera.main.GetComponent<CameraController>().EnterFirstPersonMode(gameObject);
-        objPrevX = gameObject.transform.position.x;
-        objPrevY = gameObject.transform.position.y;
-        isWatched = true;
-        firstClick = true;
+        InitializeObserveMode();
     }
 
-    public void RestoreDefaultMaterial()
+    private void InitializeObserveMode()
+    {
+        objPrevX = gameObject.transform.position.x;
+        objPrevY = gameObject.transform.position.y;
+        SetIsWatched(true);
+        SetIsFirstClick(true);
+    }
+
+    private void RestoreDefaultMaterial() // Should probably be handled by the Gamectrler
     {
         GameObject trackedObj = Camera.main.GetComponent<CameraController>().Target();
 
@@ -170,6 +201,11 @@ public class IconBehaviour : MonoBehaviour
         this.isWatched = isWatched;
     }
 
+    public void SetIsFirstClick(bool isFirstClick)
+    {
+        this.isFirstClick = isFirstClick;
+    }
+
     public void SetFilePath(string filePath)
     {
         this.filePath = filePath;
@@ -177,19 +213,14 @@ public class IconBehaviour : MonoBehaviour
 
     private Vector3 GetNewPos(int timeIndex)
     {
-        if (data[timeIndex][0].Length == 7)
-        {
-            prevTime = currentTime;
-            currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
-            timeTaken = (currentTime - prevTime).TotalMilliseconds;
-        }
-        else if (data[timeIndex][0].Length == 8)
-        {
-            prevTime = currentTime;
-            currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
-            timeTaken = (currentTime - prevTime).TotalMilliseconds;
-        }
+        float XPos = GetNewXPos(timeIndex);
+        float ZPos = GetNewZPos(timeIndex);
 
+        return new Vector3(XPos, Dimensions.sphereElevation, ZPos);
+    }
+
+    private float GetNewXPos(int timeIndex)
+    {
         if (data[timeIndex][5] != " ----")
         {
             XPos = GetLat(Convert.ToDouble(data[timeIndex][5].Substring(1)));
@@ -202,37 +233,25 @@ public class IconBehaviour : MonoBehaviour
             gameObject.SetActive(false);
             figure.SetActive(false);
         }
+        return XPos;
+    }
 
+    private float GetNewZPos(int timeIndex)
+    {
         if (data[timeIndex][6] != " ----")
         {
-            YPos = GetLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
+            ZPos = GetLong(Convert.ToDouble(data[timeIndex][6].Substring(1)));
             gameObject.SetActive(true);
             figure.SetActive(true);
         }
         else
         {
-            YPos = 0;
+            ZPos = 0;
             gameObject.SetActive(false);
             figure.SetActive(false);
         }
-        return new Vector3(XPos, Dimensions.sphereElevation, YPos);
+        return ZPos;
     }
-
-    public string Name()
-    {
-        return lines[5].Substring(8);
-    }
-
-    public string Details()
-    {
-        return "";
-    }
-
-    public Vector3 Direction()
-    {
-        return direction;
-    }
-
 
     private float GetLong(double longCoord)
     {
@@ -246,5 +265,21 @@ public class IconBehaviour : MonoBehaviour
         // Find the difference between the current point and center point, multiply by 200000 to scale it
         double scaledCoord = (latCoord + Dimensions.centrePointLat) * Dimensions.scaleFactor;
         return (float)scaledCoord;
+    }
+
+    private double CalculateTimeElapsed(int timeIndex)
+    {
+        if (data[timeIndex][0].Length == 7)
+        {
+            currentTime = DateTime.ParseExact(data[timeIndex][0], "m:ss.ff", CultureInfo.InvariantCulture);
+            timeElapsed = (currentTime - prevTime).TotalMilliseconds;
+        }
+        else if (data[timeIndex][0].Length == 8)
+        {
+            currentTime = DateTime.ParseExact(data[timeIndex][0], "mm:ss.ff", CultureInfo.InvariantCulture);
+            timeElapsed = (currentTime - prevTime).TotalMilliseconds;
+        }
+        prevTime = currentTime;
+        return timeElapsed;
     }
 }

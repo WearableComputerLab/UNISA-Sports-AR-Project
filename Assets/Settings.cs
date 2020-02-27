@@ -15,5 +15,4 @@ public class Settings : MonoBehaviour
         team2Mat = Resources.Load("NormalSphere", typeof(Material)) as Material;
         selectedMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
     }
-
 }

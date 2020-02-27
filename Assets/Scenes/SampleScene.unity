@@ -606,6 +606,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1956971124}
   - component: {fileID: 1956971123}
+  - component: {fileID: 1956971127}
   - component: {fileID: 1956971125}
   - component: {fileID: 1956971126}
   m_Layer: 0
@@ -629,7 +630,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 6651289193898400361, guid: a1ee64c770f0cae4cbdd62719bd87b96, type: 3}
   figure: {fileID: 6713690970896724886, guid: 6e7fe4f193c018743971c035c300c95b, type: 3}
-  playerDetails: {fileID: 0}
   rewindText: {fileID: 1549415948}
 --- !u!4 &1956971124
 Transform:
@@ -667,6 +667,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddddf24cb872f284c9a1e0237b172161, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1956971127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956971122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6634349dba7699542b3021049de4c3c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2132096758

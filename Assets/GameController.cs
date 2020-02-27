@@ -5,29 +5,28 @@ using System.Threading;
 
 public class GameController : MonoBehaviour
 {
+    public enum InteractionMode { Observing, FirstPerson, Menu };
+    private InteractionMode interactionMode = InteractionMode.Observing;
+
     public GameObject icon;
     public GameObject figure;
     public GameObject rewindText;
 
-    private static GameObject[] icons = new GameObject[6];
-    private static GameObject[] figures = new GameObject[6];
+    private GameObject[] icons = new GameObject[6];
+    private GameObject[] figures = new GameObject[6];
 
-    private static Vector3 distTravelledCurrentTurn = new Vector3(0, 0, 0);
+    private Vector3 distTravelledCurrentTurn = new Vector3(0, 0, 0);
 
-    private int timeIndex = 0;
+    private int tupleIndex = 0;
     private bool isRewinding;
     private int rewindStartIndex = -1;
 
-    private static int fastestPlayerCode;
+    private int fastestPlayerCode;
 
-    private static float timer = 0;
+    private bool followModeOn = false;
 
-    private static bool followModeOn = false;
-    public enum TrackingMode { Observing, FirstPerson };
-    public static TrackingMode trackingMode = TrackingMode.Observing;
-
-    private static bool playerUIActivated = false;
-    private static GameObject fastestPlayer;
+    private bool playerUIActivated = false;
+    private GameObject fastestPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -60,21 +59,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
 
-        if (timeIndex >= rewindStartIndex)
+        if (tupleIndex >= rewindStartIndex)
         {
             isRewinding = false;
             rewindStartIndex = -1;
-        }
-
-        if (isRewinding)
-        {
-            rewindText.SetActive(true);
-        }
-        else
-        {
-            rewindText.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -83,83 +72,19 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < icons.Length; i++)
-            {
-                if (icons[i] != null)
-                {
-                    icons[i].GetComponent<IconBehaviour>().Move(i, timeIndex);
-                }
-            }
+            MoveAllFigures();
         }
-        timeIndex += 1;
-        //      Thread.Sleep(40);
+        tupleIndex += 1;
+        // Thread.Sleep(40);
     }
 
-    private void OnGUI()
+    public void MoveAllFigures()
     {
-        GUIStyle guiStyle = new GUIStyle(GUI.skin.button);
-
-        if (followModeOn)
+        for (int i = 0; i < icons.Length; i++)
         {
-            CameraController camctrl = Camera.main.GetComponent<CameraController>();
-            GameObject target = camctrl.Target();
-
-            IconBehaviour fpb = target.GetComponent<IconBehaviour>();
-            ActivatePlayerUI(fpb, followModeOn);
-
-            if (GUI.Button(new Rect(280, 1200, 240, 150), "Main View", guiStyle))
+            if (icons[i] != null)
             {
-                Camera.main.GetComponent<CameraController>().LeaveFollowMode();
-            }
-
-            if (trackingMode == TrackingMode.FirstPerson)
-            {
-                if (GUI.Button(new Rect(500, 1200, 240, 150), "Zoom Out", guiStyle))
-                {
-                    trackingMode = TrackingMode.Observing;
-                    camctrl.EnterFollowMode(target);
-                }
-            }
-            else if (trackingMode == TrackingMode.Observing)
-            {
-                if (GUI.Button(new Rect(500, 1200, 240, 150), "Zoom In", guiStyle))
-                {
-                    trackingMode = TrackingMode.FirstPerson;
-                    camctrl.EnterFirstPersonMode(target);
-                }
-            }
-        }
-        else
-        {
-            if (playerUIActivated)
-            {
-                IconBehaviour ib = fastestPlayer.GetComponent<IconBehaviour>();
-                ActivatePlayerUI(ib, followModeOn);
-            }
-
-            if (GUI.Button(new Rect(45, 1200, 170, 150), "Replay", guiStyle))
-            {
-                Rewind();
-            }
-        }
-    }
-
-    private void ActivatePlayerUI(IconBehaviour ib, bool followModeOn)
-    {
-        if (Settings.annotate) // Ensure user has enabled annotations
-        {
-            GUIStyle guiStyle = new GUIStyle(GUI.skin.box);
-            GUIStyle stats = new GUIStyle(GUI.skin.label);
-            guiStyle.fontSize = 50;
-            stats.fontSize = 25;
-
-            if (followModeOn)
-            {
-                GUI.Box(new Rect(0, 0, 500, 100), "Following " + ib.Name(), guiStyle);
-            }
-            else
-            {
-                GUI.Box(new Rect(0, 0, 500, 100), ib.Name(), guiStyle);
+                icons[i].GetComponent<IconBehaviour>().Move(i, tupleIndex);
             }
         }
     }
@@ -168,37 +93,35 @@ public class GameController : MonoBehaviour
     {
         if (rewindStartIndex == -1)
         {
-            rewindStartIndex = timeIndex;
+            rewindStartIndex = tupleIndex;
         }
-        int oldIndex = timeIndex;
         isRewinding = true;
-        timeIndex -= Dimensions.rewindFactor;
-        if (timeIndex < 9)
+        tupleIndex -= Dimensions.rewindFactor;
+        if (tupleIndex < 9)
         {
-            timeIndex = 9;
+            tupleIndex = 9;
         }
-        //        print("Rewinding from " + oldIndex + " to " + timeIndex);
         for (int i = 0; i < icons.Length; i++)
         {
-            icons[i].GetComponent<IconBehaviour>().Teleport(timeIndex);
+            icons[i].GetComponent<IconBehaviour>().Teleport(tupleIndex);
         }
     }
 
-    public static void MoveFigure(GameObject figure, Vector3 pos, float speed)
+    public void MoveFigure(GameObject figure, Vector3 pos, float speed)
     {
         figure.GetComponent<FigureBehaviour>().Move(pos, speed);
     }
 
-    public static void TeleportFigure(GameObject figure, Vector3 pos)
+    public void TeleportFigure(GameObject figure, Vector3 pos)
     {
         figure.GetComponent<FigureBehaviour>().Teleport(pos);
     }
 
-    public static void EvaluateGreatestDist(int playerCode, Vector3 value)
+    public void PlayerUIAutomation(int playerCode, Vector3 value)
     {
         if (playerCode == 0)
         {
-            distTravelledCurrentTurn = new Vector2(0, 0);
+            this.distTravelledCurrentTurn = new Vector2(0, 0);
             fastestPlayerCode = 0;
         }
 
@@ -214,32 +137,51 @@ public class GameController : MonoBehaviour
 
             if ((distTravelledCurrentTurn.x > Dimensions.UIRunThresholdX) || (distTravelledCurrentTurn.z > Dimensions.UIRunThresholdZ))
             {
-                SetPlayerUIActivation(true);
+                SetPlayerUIActivated(true);
             }
             else
             {
-                SetPlayerUIActivation(false);
+                SetPlayerUIActivated(false);
             }
         }
     }
-    public static float Timer()
+
+    public GameObject FastestPlayer()
     {
-        return timer;
+        return fastestPlayer;
     }
 
-    public static bool FollowModeOn()
+    public bool FollowModeOn()
     {
         return followModeOn;
     }
 
-    public static void SetFollowModeOn(bool value)
+    public void SetFollowModeOn(bool value)
     {
         followModeOn = value;
     }
+    public bool PlayerUIActivated()
+    {
+        return playerUIActivated;
+    }
 
-    public static void SetPlayerUIActivation(bool isActive)
+    public void SetPlayerUIActivated(bool isActive)
     {
         playerUIActivated = isActive;
+    }
+    public InteractionMode CurrentInteractionMode()
+    {
+        return interactionMode;
+    }
+
+    public void SetInteractionMode(InteractionMode mode)
+    {
+        interactionMode = mode;
+    }
+
+    public bool IsRewinding()
+    {
+        return isRewinding;
     }
 
 }
