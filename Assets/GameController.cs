@@ -7,7 +7,6 @@ public class GameController : MonoBehaviour
 {
     public GameObject icon;
     public GameObject figure;
-    public GameObject playerDetails;
     public GameObject rewindText;
 
     private static GameObject[] icons = new GameObject[6];
@@ -25,7 +24,7 @@ public class GameController : MonoBehaviour
 
     private static bool followModeOn = false;
     public enum TrackingMode { Observing, FirstPerson };
-    public static TrackingMode trackingMode = TrackingMode.FirstPerson;
+    public static TrackingMode trackingMode = TrackingMode.Observing;
 
     private static bool playerUIActivated = false;
     private static GameObject fastestPlayer;
@@ -147,22 +146,22 @@ public class GameController : MonoBehaviour
 
     private void ActivatePlayerUI(IconBehaviour ib, bool followModeOn)
     {
-        GUIStyle guiStyle = new GUIStyle(GUI.skin.box);
-        GUIStyle stats = new GUIStyle(GUI.skin.label);
-        guiStyle.fontSize = 50;
-        stats.fontSize = 25;
+        if (Settings.annotate) // Ensure user has enabled annotations
+        {
+            GUIStyle guiStyle = new GUIStyle(GUI.skin.box);
+            GUIStyle stats = new GUIStyle(GUI.skin.label);
+            guiStyle.fontSize = 50;
+            stats.fontSize = 25;
 
-        if (followModeOn)
-        {
-            GUI.Box(new Rect(0, 0, 500, 100), "Following " + ib.Name(), guiStyle);
+            if (followModeOn)
+            {
+                GUI.Box(new Rect(0, 0, 500, 100), "Following " + ib.Name(), guiStyle);
+            }
+            else
+            {
+                GUI.Box(new Rect(0, 0, 500, 100), ib.Name(), guiStyle);
+            }
         }
-        else
-        {
-            GUI.Box(new Rect(0, 0, 500, 100), ib.Name(), guiStyle);
-        }
-        
-        
-        
     }
 
     public void Rewind()

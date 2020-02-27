@@ -29,11 +29,17 @@ public class ObjectRaycaster : MonoBehaviour
     {
         if (GameController.trackingMode == GameController.TrackingMode.Observing)
         {
-            objBehaviour.Observe();
+            if (objBehaviour != null)
+            {
+                objBehaviour.Observe();
+            }
         }
         else if (GameController.trackingMode == GameController.TrackingMode.FirstPerson)
         {
-            objBehaviour.ObserveFirstPerson();
+            if (objBehaviour != null)
+            {
+                objBehaviour.ObserveFirstPerson();
+            }
         }
     }
 

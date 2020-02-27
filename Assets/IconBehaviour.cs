@@ -67,9 +67,6 @@ public class IconBehaviour : MonoBehaviour
             distTravelledXAcc += Mathf.Abs(gameObject.transform.position.x - objPrevX);
             distTravelledYAcc += Mathf.Abs(gameObject.transform.position.y - objPrevY);
 
-            GameObject detailsBox = GameObject.Find("Controller").GetComponent<GameController>().playerDetails;
-            TextBehaviour dbBehaviour = detailsBox.GetComponent<TextBehaviour>();
-
             if (isWatched)
             {
                 if (((distTravelledXAcc > 0.1) || (distTravelledYAcc > 0.1)) || (firstClick))
