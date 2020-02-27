@@ -100,28 +100,13 @@ public class GameController : MonoBehaviour
     {
         GUIStyle guiStyle = new GUIStyle(GUI.skin.button);
 
-        guiStyle.fontSize = 50;
-                
-        if (playerUIActivated)
-        {
-            Debug.Log("Player UI activated");
-            IconBehaviour fpb = fastestPlayer.GetComponent<IconBehaviour>();
-            GUI.Box(new Rect(0, 0, 500, 100), fpb.Name(), guiStyle);
-        }
-        else
-        {
-            Debug.Log("NO UI ACTIVAT");
-        }
-
-        if (GUI.Button(new Rect(45, 1200, 170, 150), "Replay", guiStyle))
-        {
-            Rewind();
-        }
-
         if (followModeOn)
         {
             CameraController camctrl = Camera.main.GetComponent<CameraController>();
             GameObject target = camctrl.Target();
+
+            IconBehaviour fpb = target.GetComponent<IconBehaviour>();
+            ActivatePlayerUI(fpb, followModeOn);
 
             if (GUI.Button(new Rect(280, 1200, 240, 150), "Main View", guiStyle))
             {
@@ -145,6 +130,39 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (playerUIActivated)
+            {
+                IconBehaviour ib = fastestPlayer.GetComponent<IconBehaviour>();
+                ActivatePlayerUI(ib, followModeOn);
+            }
+
+            if (GUI.Button(new Rect(45, 1200, 170, 150), "Replay", guiStyle))
+            {
+                Rewind();
+            }
+        }
+    }
+
+    private void ActivatePlayerUI(IconBehaviour ib, bool followModeOn)
+    {
+        GUIStyle guiStyle = new GUIStyle(GUI.skin.box);
+        GUIStyle stats = new GUIStyle(GUI.skin.label);
+        guiStyle.fontSize = 50;
+        stats.fontSize = 25;
+
+        if (followModeOn)
+        {
+            GUI.Box(new Rect(0, 0, 500, 100), "Following " + ib.Name(), guiStyle);
+        }
+        else
+        {
+            GUI.Box(new Rect(0, 0, 500, 100), ib.Name(), guiStyle);
+        }
+        
+        
+        
     }
 
     public void Rewind()
@@ -194,9 +212,8 @@ public class GameController : MonoBehaviour
         if (playerCode == (figures.Length - 1))
         {
             fastestPlayer = icons[fastestPlayerCode];
-            icons[fastestPlayerCode].GetComponent<IconBehaviour>().DisplayDetails(); // Defunct
-            
-            if((distTravelledCurrentTurn.x > Dimensions.UIRunThresholdX) || (distTravelledCurrentTurn.z > Dimensions.UIRunThresholdZ))
+
+            if ((distTravelledCurrentTurn.x > Dimensions.UIRunThresholdX) || (distTravelledCurrentTurn.z > Dimensions.UIRunThresholdZ))
             {
                 SetPlayerUIActivation(true);
             }

@@ -25,8 +25,7 @@ public class CameraController : MonoBehaviour
 
         if (followingTarget)
         {
-            Material newMat = Resources.Load("SelectedSphere", typeof(Material)) as Material;
-            target.GetComponent<Renderer>().material = newMat;
+            target.GetComponent<IconBehaviour>().ToggleMaterial(true);
 
             if (GameController.trackingMode == GameController.TrackingMode.Observing)
             {

@@ -14,18 +14,7 @@ public class ObjectRaycaster : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
-        if (Physics.Raycast(ray, out hit))
-        {
-            hitObject = hit.transform.gameObject;
-            IconBehaviour objBehaviour = hitObject.GetComponent<IconBehaviour>();
-
-            if (objBehaviour != null)
-            {
-                objBehaviour.DisplayDetails();
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+          if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (Physics.Raycast(ray, out hit))
             {

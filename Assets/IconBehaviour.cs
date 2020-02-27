@@ -11,6 +11,7 @@ public class IconBehaviour : MonoBehaviour
     private string filePath;
     private string[][] data;
     private string[] lines;
+    private int teamNo = 1;
 
     private float XPos;
     private float YPos;
@@ -140,22 +141,31 @@ public class IconBehaviour : MonoBehaviour
     public void RestoreDefaultMaterial()
     {
         GameObject trackedObj = Camera.main.GetComponent<CameraController>().Target();
-        Material origMat = Resources.Load("NormalSphere", typeof(Material)) as Material;
 
         if (trackedObj != null)
         {
-            trackedObj.GetComponent<Renderer>().material = origMat;
+            trackedObj.GetComponent<IconBehaviour>().ToggleMaterial(false);
         }
     }
 
-    public void DisplayDetails()
+    public void ToggleMaterial(bool isSelected)
     {
-        GameObject detailsBox = GameObject.Find("Controller").GetComponent<GameController>().playerDetails;
-        TextBehaviour tb = detailsBox.GetComponent<TextBehaviour>();
-        tb.SetActivationTime(GameController.Timer());
-        tb.SetVisibility(true);
-        tb.SetPlayer(gameObject);
-        tb.SetTitle(data[5][0].Substring(8));
+        Renderer renderer = gameObject.GetComponent<Renderer>();
+        if (isSelected)
+        {
+            renderer.material = Settings.selectedMat;
+        }
+        else
+        {
+            if (teamNo == 1)
+            {
+                renderer.material = Settings.team1Mat;
+            }
+            else if (teamNo == 2)
+            {
+                renderer.material = Settings.team2Mat;
+            }
+        }
     }
 
     public void SetIsWatched(bool isWatched)
@@ -214,6 +224,11 @@ public class IconBehaviour : MonoBehaviour
     public string Name()
     {
         return lines[5].Substring(8);
+    }
+
+    public string Details()
+    {
+        return "";
     }
 
     public Vector3 Direction()
