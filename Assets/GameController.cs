@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         string[] filePaths = new string[6];
-        filePaths[0] = "Boak 2514 201005011355 (1)";
+        filePaths[0] = "Boak 2514 201005011355";
         filePaths[1] = "Gray 2525 201005011512";
         filePaths[2] = "Hartlett 2620 201005011354";
         filePaths[3] = "Rodan 2541 201005011354";
