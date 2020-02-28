@@ -147,7 +147,7 @@ public class IconBehaviour : MonoBehaviour
     public void ObserveWide()
     {
         RestoreDefaultMaterial();
-        Camera.main.GetComponent<CameraController>().EnterFollowMode(gameObject);
+        Camera.main.GetComponent<CameraController>().EnterWideFollowMode(gameObject);
         InitializeObserveMode();
     }
 

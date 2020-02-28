@@ -59,7 +59,6 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (tupleIndex >= rewindStartIndex)
         {
             isRewinding = false;
@@ -169,6 +168,7 @@ public class GameController : MonoBehaviour
     {
         playerUIActivated = isActive;
     }
+
     public InteractionMode CurrentInteractionMode()
     {
         return interactionMode;
